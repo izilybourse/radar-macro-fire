@@ -40,10 +40,6 @@ jobs:
       - name: Calcul du snapshot
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
-          BREVO_LIST_ID: ${{ secrets.BREVO_LIST_ID }}
-          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
-          BREVO_SENDER_NAME: ${{ secrets.BREVO_SENDER_NAME }}
           PUBLIC_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
           MODE: ${{ github.event.inputs.mode || (github.event.schedule == '15 22 * * 1-5' && 'close' || 'intraday') }}
         run: python scripts/radar.py snapshot --mode "$MODE" --out data-out
