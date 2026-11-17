@@ -605,7 +605,7 @@ def history_perf(history, px, spec):
 
 
 # ----------------------------------------------------------------------------
-# Alertes : Atom + e-mail Brevo
+# Alertes : flux Atom (aucun e-mail)
 # ----------------------------------------------------------------------------
 REGIME_FR = {"goldilocks": "Goldilocks", "reflation": "Reflation", "stagflation": "Stagflation", "neutral": "Neutre"}
 
@@ -624,29 +624,6 @@ def write_atom(path, history, base_url):
            "<title>Radar Macro FIRE : changements de régime</title><id>tag:izilyfire.fr,2026:radar-macro-fire</id>"
            f"<updated>{upd}</updated><link rel=\"self\" href=\"{base_url}alerts.xml\"/>" + "".join(items) + "</feed>")
     Path(path).write_text(xml, encoding="utf-8")
-
-
-def send_brevo(entry):
-    key, list_id = os.getenv("BREVO_API_KEY"), os.getenv("BREVO_LIST_ID")
-    sender, name = os.getenv("BREVO_SENDER_EMAIL"), os.getenv("BREVO_SENDER_NAME", "Izily Fire")
-    if not (key and list_id and sender):
-        return None
-    subject = f"Radar Macro FIRE : nouveau régime {REGIME_FR[entry['to']]}"
-    html = (f"<h2>Changement de régime confirmé</h2><p>Le régime passe de <b>{REGIME_FR[entry['from']]}</b> à "
-            f"<b>{REGIME_FR[entry['to']]}</b> (confirmé sur 3 jours de bourse, date {entry['date']}).</p>"
-            f"<p>Indice de risque de bulle : {entry.get('bubble')} sur 100.</p>"
-            "<p>Voir le détail sur <a href=\"https://izilyfire.fr/radar-macro-fire\">izilyfire.fr</a>. "
-            "Outil pédagogique, pas un conseil en investissement personnalisé.</p>"
-            "<p style=\"font-size:12px\"><a href=\"{{ unsubscribe }}\">Se désabonner</a></p>")
-    hdr = {"api-key": key, "content-type": "application/json", "accept": "application/json"}
-    body = {"name": f"Radar régime {entry['date']} {entry['to']}", "subject": subject, "type": "classic",
-            "sender": {"name": name, "email": sender}, "htmlContent": html, "recipients": {"listIds": [int(list_id)]}}
-    c = requests.post("https://api.brevo.com/v3/emailCampaigns", headers=hdr, json=body, timeout=25)
-    c.raise_for_status()
-    cid = c.json()["id"]
-    s = requests.post(f"https://api.brevo.com/v3/emailCampaigns/{cid}/sendNow", headers=hdr, timeout=25)
-    s.raise_for_status()
-    return True
 
 
 # ----------------------------------------------------------------------------
@@ -769,7 +746,7 @@ def cmd_snapshot(args):
             d = pd.Timestamp(h["date"])
             entries.append({"date": h["date"], "from": h["from"], "to": h["to"], "ts": f"{h['date']}T22:00:00Z",
                             "spy": r(px["SPY"].asof(d), 2), "G": r(G.asof(d), 1), "I": r(I.asof(d), 1),
-                            "bubble": None, "bootstrap": True, "email_sent": True})
+                            "bubble": None, "bootstrap": True})
         log(f"amorçage de l'état par rejeu : {len(entries)} changements, régime {state['current']}")
 
     # signal du jour (G, I, ambiguïté, confirmation macro)
@@ -797,7 +774,7 @@ def cmd_snapshot(args):
             state["since"] = last_bar
             changed_entry = {"date": last_bar, "from": prev, "to": state["current"], "ts": now_iso(),
                              "spy": r(px["SPY"].iloc[-1], 2), "G": r(g_now, 1), "I": r(i_now, 1),
-                             "bubble": bub["score"], "bootstrap": False, "email_sent": False}
+                             "bubble": bub["score"], "bootstrap": False}
             entries.append(changed_entry)
             log(f"CHANGEMENT DE RÉGIME CONFIRMÉ : {prev} -> {state['current']}")
 
@@ -848,20 +825,8 @@ def cmd_snapshot(args):
     write_json(out / "history.json", clean({"schema": 1, "generated_at": now_iso(), "entries": entries}), ["entries"])
     Path(out / "model_spec.json").write_text(json.dumps(spec, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    # alertes : Atom + e-mail (nouvelle tentative pour les changements non envoyés de moins de 3 jours)
+    # alerte : flux Atom uniquement
     base_url = os.getenv("PUBLIC_BASE_URL", "https://izilybourse.github.io/radar-macro-fire/")
-    for h in entries:
-        if not h.get("email_sent"):
-            age = (pd.Timestamp.today() - pd.Timestamp(h["date"])).days
-            if age <= 3:
-                try:
-                    res = send_brevo(h)
-                    if res:
-                        h["email_sent"] = True
-                except Exception as e:
-                    warn(f"envoi Brevo échoué: {e}")
-            else:
-                h["email_sent"] = True
     write_json(out / "history.json", clean({"schema": 1, "generated_at": now_iso(), "entries": entries}), ["entries"])
     write_atom(out / "alerts.xml", entries, base_url)
 
