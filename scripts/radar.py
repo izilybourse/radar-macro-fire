@@ -812,6 +812,8 @@ def cmd_snapshot(args):
                        "asset_classes": asset_class_target(cur, blend if use_amb else None, tier_eff, spec)},
         "market": {"spy": r(px["SPY"].iloc[-1], 2), "vix": r(px["^VIX"].dropna().iloc[-1], 2) if "^VIX" in px else None},
         "history_perf": history_perf(entries, px, spec),
+        "trail": [{"d": str(G.index[k])[:10], "G": r(float(G.iloc[k]), 1), "I": r(float(I.iloc[k]), 1)}
+                  for k in sorted(set(list(range(len(G) - 1, max(len(G) - 61, 0), -5)) + [len(G) - 1]))],
     }
     snap = clean(snap)
     req_keys = ["schema", "generated_at", "regime", "inertia", "bubble", "allocation", "sources"]
@@ -1072,6 +1074,67 @@ def cmd_backtest(args):
                       "f": {kk: r(float(cc[kk].iloc[k]) * 100, 1) for kk in cc.columns}})
     cases = cases[-spec["backtest"]["max_game_cases"]:]
 
+    # --- Validation hors échantillon, robustesse, chronologie, secteurs par régime ---
+    import copy
+    split = pd.Timestamp("2018-01-01")
+    if not (gross.index[0] + pd.Timedelta(days=900) < split < gross.index[-1] - pd.Timedelta(days=900)):
+        split = gross.index[len(gross) // 2]
+    parts = {"p1": slice(None, split - pd.Timedelta(days=1)), "p2": slice(split, None)}
+    validation = {"split": str(split)[:10], "periods": {}}
+    for k_, sl_ in parts.items():
+        a_, b_ = gross.loc[sl_], None
+        validation["periods"][k_] = {"start": str(a_.index[0])[:10], "end": str(a_.index[-1])[:10],
+                                      "portfolio_net": mt(net.loc[sl_]), "vt": mt(vt.loc[sl_]), "spy": mt(spy.loc[sl_])}
+    ex = (net - vt)
+    roll = ((1 + net).rolling(756).apply(np.prod, raw=True) / (1 + vt).rolling(756).apply(np.prod, raw=True) - 1).dropna()
+    roll = roll.iloc[::21]
+    validation["rolling_3y"] = {"windows": int(len(roll)),
+                                "share_beating_vt_pct": r(float((roll > 0).mean() * 100), 1) if len(roll) else None,
+                                "median_excess_pct": r(float(roll.median() * 100), 1) if len(roll) else None,
+                                "worst_excess_pct": r(float(roll.min() * 100), 1) if len(roll) else None}
+    validation["note_fixed_a_priori"] = True
+
+    def run_variant(sp, req):
+        c2, G2, I2, raw2 = regime_series(px, sp)
+        conf2, _, ch2 = replay(raw2, req)
+        conf2 = conf2.reindex(rets.loc[start:].index).bfill()
+        g2, n2, _ = simulate(rets.loc[start:], conf2, sp)
+        m2 = mt(n2) or {}
+        yrs2 = max(len(n2) / 252, 1e-9)
+        return {"cagr": m2.get("cagr"), "sharpe": m2.get("sharpe"), "max_drawdown": m2.get("max_drawdown"),
+                "changes_per_year": r(len(ch2) / yrs2, 2)}
+    robustness = {"inertia": [], "windows": []}
+    try:
+        for n_ in (1, 2, 3, 5, 10):
+            sp = copy.deepcopy(spec)
+            res = run_variant(sp, n_)
+            res["value"] = n_
+            robustness["inertia"].append(res)
+        for lg, sh_ in ((189, 95), (252, 126), (315, 158)):
+            sp = copy.deepcopy(spec)
+            sp["windows"]["long"], sp["windows"]["short"] = lg, sh_
+            res = run_variant(sp, spec["inertia"]["required_days"])
+            res["value"] = f"{lg}/{sh_}"
+            robustness["windows"].append(res)
+    except Exception as e:
+        warn(f"robustesse indisponible : {e}")
+    ci = conf.index
+    tsel = list(range(0, len(ci), 5))
+    if tsel[-1] != len(ci) - 1:
+        tsel.append(len(ci) - 1)
+    timeline = {"dates": [str(ci[k])[:10] for k in tsel], "G": [r(float(G.loc[ci[k]]), 0) for k in tsel],
+                "I": [r(float(I.loc[ci[k]]), 0) for k in tsel], "reg": [conf.iloc[k] for k in tsel]}
+    sbr = {}
+    for rg in spec["regimes"]:
+        m = (reg_al.shift(1) == rg)
+        sbr[rg] = {}
+        if int(m.sum()) > 20:
+            for sct in spec["sectors"]:
+                if sct["ticker"] in rets.columns:
+                    sbr[rg][sct["key"]] = r(float(rets[sct["ticker"]].reindex(gross.index).fillna(0)[m].mean() * 252 * 100), 1)
+    yrs_all = len(gross) / 252
+    switch = {"changes": len(changes), "per_year": r(len(changes) / yrs_all, 2)}
+
     bt = {"schema": 1, "generated_at": now_iso(), "demo": bool(args.demo),
           "period": {"start": str(gross.index[0])[:10], "end": str(gross.index[-1])[:10]},
           "method": ("Signal de marché seul (sans FRED, non rejouable), inertie 3 jours, poids de base par régime sans ajustement de bulle, "
@@ -1081,7 +1144,8 @@ def cmd_backtest(args):
                      "ETF immobilier : pas d'équivalent UCITS S&P 500, proxy US sur tout l'historique.",
                      "Performances passées, aucune garantie. Hors fiscalité et hors change EUR."],
           "universe": uinfo, "curves": curves, "regime_bands": bands, "metrics": metrics, "metrics_ucits_window": metrics_u,
-          "alpha_by_regime": alpha, "regime_stats": stats, "turnover": tor, "game_cases": cases}
+          "alpha_by_regime": alpha, "regime_stats": stats, "turnover": tor, "game_cases": cases,
+          "validation": validation, "robustness": robustness, "timeline": timeline, "sector_by_regime": sbr, "switch": switch}
     write_json(out / "backtest.json", clean(bt), ["curves", "metrics"])
 
     t3, c3 = transition_matrix(conf, 63)
