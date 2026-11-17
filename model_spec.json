@@ -1,0 +1,585 @@
+{
+ "version": 1,
+ "_doc": "Source unique de vérité du Radar Macro FIRE. Lu par scripts/radar.py ET par le widget. Le calcul officiel se fait dans le script, le widget affiche.",
+ "windows": {
+  "long": 252,
+  "short": 126,
+  "ma_short": 50,
+  "ma_long": 200,
+  "momentum_1m": 21,
+  "momentum_3m": 63,
+  "range_6m": 126,
+  "cape_proxy": 1000,
+  "concentration_mean": 252
+ },
+ "tickers": {
+  "growth": [
+   "SPY",
+   "HYG",
+   "TLT"
+  ],
+  "inflation": [
+   "GSG",
+   "TIP",
+   "IEF"
+  ],
+  "bubble": [
+   "QQQ",
+   "VTI",
+   "RSP",
+   "^VIX",
+   "^TNX",
+   "^IRX"
+  ],
+  "benchmarks": [
+   "VT",
+   "SPY"
+  ],
+  "all_weather_extra": [
+   "GLD",
+   "DBC"
+  ]
+ },
+ "growth": {
+  "_doc": "G = 100 * (w12*s12 + w6*s6 + wH*sH - wT*penT) / (w12+w6+wH+wT). Chaque s est un rendement divisé par son échelle puis plafonné à [-cap, +cap]. penT vaut max(0, -rendement TLT 6M / echelle) plafonné à 1 : un effondrement des obligations longues (hausse des taux) pénalise la croissance.",
+  "spy12": {
+   "weight": 0.35,
+   "scale": 0.2
+  },
+  "spy6": {
+   "weight": 0.25,
+   "scale": 0.12,
+   "cap": 1.0,
+   "_doc": "Remplace spy6Capped : plafond explicite de la contribution à +/- cap, jamais un plafond caché sur la valeur brute."
+  },
+  "hyg6": {
+   "weight": 0.25,
+   "scale": 0.04
+  },
+  "tlt_penalty": {
+   "weight": 0.15,
+   "scale": 0.1
+  }
+ },
+ "inflation": {
+  "_doc": "I = 100 * (w12*c12 + w6*c6 + wB*cB) / (w12+w6+wB). cB = rendement relatif TIP moins IEF sur 6 mois (proxy de point mort d'inflation).",
+  "gsg12": {
+   "weight": 0.35,
+   "scale": 0.2
+  },
+  "gsg6": {
+   "weight": 0.35,
+   "scale": 0.12
+  },
+  "breakeven6": {
+   "weight": 0.3,
+   "scale": 0.03
+  }
+ },
+ "thresholds": {
+  "axis_zero": 0.0,
+  "ambiguity_band": 10.0,
+  "_doc": "Quadrant : G>=0 et I<0 Goldilocks, G>=0 et I>=0 Reflation, G<0 et I>=0 Stagflation, G<0 et I<0 Neutre. Zone ambiguë stagflation/reflation : |G|<=bande et I>bande. Zone ambiguë goldilocks/stagflation : |G|<=bande ET |I|<=bande, régime brut goldilocks ou stagflation."
+ },
+ "confidence": {
+  "base": 40,
+  "slope": 0.8,
+  "min": 40,
+  "max": 92,
+  "ambiguity_penalty": 12,
+  "macro_max_adjust": 8,
+  "floor": 20,
+  "ceiling": 95
+ },
+ "inertia": {
+  "required_days": 3
+ },
+ "regimes": [
+  "goldilocks",
+  "reflation",
+  "stagflation",
+  "neutral"
+ ],
+ "fred": {
+  "series": [
+   "CPIAUCSL",
+   "INDPRO",
+   "PAYEMS",
+   "GDPNOW",
+   "ICSA",
+   "BAMLH0A0HYM2",
+   "T10Y2Y",
+   "DGS10",
+   "DGS2"
+  ],
+  "lookback_days": 900,
+  "growth_weights": {
+   "INDPRO": 0.2,
+   "PAYEMS": 0.2,
+   "GDPNOW": 0.2,
+   "ICSA": 0.15,
+   "BAMLH0A0HYM2": 0.15,
+   "T10Y2Y": 0.1
+  },
+  "inflation_weights": {
+   "cpi_yoy": 0.6,
+   "cpi_3m": 0.4
+  },
+  "scales": {
+   "indpro_yoy": 0.03,
+   "payems_yoy_center": 0.005,
+   "payems_yoy_scale": 0.01,
+   "gdpnow_center": 1.5,
+   "gdpnow_scale": 2.0,
+   "icsa_scale": 0.15,
+   "hy_center": 4.5,
+   "hy_scale": 2.0,
+   "curve_scale": 1.0,
+   "cpi_center": 0.025,
+   "cpi_yoy_scale": 0.015,
+   "cpi_3m_scale": 0.02
+  },
+  "min_abs_for_override": 0.25,
+  "neutral_band": 0.1
+ },
+ "bubble": {
+  "weights": {
+   "valuation": 0.25,
+   "euphoria": 0.2,
+   "debt": 0.2,
+   "liquidity": 0.2,
+   "concentration": 0.15
+  },
+  "tiers": [
+   40,
+   55,
+   70
+  ],
+  "valuation": {
+   "cape_low": 15,
+   "cape_high": 40,
+   "proxy_scale": 0.5
+  },
+  "euphoria": {
+   "vix_calm": 12,
+   "vix_stress": 25,
+   "breadth_low": 0.5,
+   "breadth_high": 1.0
+  },
+  "debt": {
+   "hy_tight": 2.8,
+   "hy_wide": 5.5,
+   "proxy_dd_scale": 0.08
+  },
+  "liquidity": {
+   "slope_tight": 1.0,
+   "slope_flat": -0.5,
+   "direction_window": 63,
+   "direction_move": 0.25,
+   "bonus_resteepen": 10,
+   "bonus_flatten": 5
+  },
+  "concentration": {
+   "scale": 0.15
+  }
+ },
+ "allocation": {
+  "tilt_per_tier": 0.1,
+  "ambiguity_extra_tiers": 1,
+  "blend_primary": 0.5,
+  "action_thresholds": {
+   "reinforce": 14.0,
+   "overweight": 10.5,
+   "hold": 7.0,
+   "trim": 4.0
+  },
+  "range_labels": {
+   "low": 0.33,
+   "high": 0.67
+  }
+ },
+ "sectors": [
+  {
+   "key": "tech",
+   "ticker": "XLK",
+   "kind": "cyclical",
+   "beta": "high",
+   "base": {
+    "goldilocks": 22,
+    "reflation": 12,
+    "stagflation": 8,
+    "neutral": 15
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Information Technology Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B3WJKG14",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUIT.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "comm",
+   "ticker": "XLC",
+   "kind": "cyclical",
+   "beta": "high",
+   "base": {
+    "goldilocks": 12,
+    "reflation": 4,
+    "stagflation": 3,
+    "neutral": 8
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Communication Sector UCITS ETF USD (Acc)",
+    "isin": "IE00BDDRF478",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUCM.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "disc",
+   "ticker": "XLY",
+   "kind": "cyclical",
+   "beta": "high",
+   "base": {
+    "goldilocks": 14,
+    "reflation": 8,
+    "stagflation": 3,
+    "neutral": 5
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Consumer Discretionary Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B4MCHD36",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUCD.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "fin",
+   "ticker": "XLF",
+   "kind": "cyclical",
+   "beta": "mid",
+   "base": {
+    "goldilocks": 12,
+    "reflation": 14,
+    "stagflation": 6,
+    "neutral": 8
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Financials Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B4JNQZ49",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUFS.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "ind",
+   "ticker": "XLI",
+   "kind": "cyclical",
+   "beta": "mid",
+   "base": {
+    "goldilocks": 10,
+    "reflation": 13,
+    "stagflation": 6,
+    "neutral": 6
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Industrials Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B4LN9N13",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUIS.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "mat",
+   "ticker": "XLB",
+   "kind": "cyclical",
+   "beta": "mid",
+   "base": {
+    "goldilocks": 5,
+    "reflation": 12,
+    "stagflation": 8,
+    "neutral": 3
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Materials Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B4MKCJ84",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUMS.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "energy",
+   "ticker": "XLE",
+   "kind": "cyclical",
+   "beta": "mid",
+   "base": {
+    "goldilocks": 5,
+    "reflation": 18,
+    "stagflation": 20,
+    "neutral": 4
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Energy Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B42NKQ00",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUES.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "health",
+   "ticker": "XLV",
+   "kind": "defensive",
+   "beta": "low",
+   "base": {
+    "goldilocks": 7,
+    "reflation": 6,
+    "stagflation": 15,
+    "neutral": 16
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Health Care Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B43HR379",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUHC.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "staples",
+   "ticker": "XLP",
+   "kind": "defensive",
+   "beta": "low",
+   "base": {
+    "goldilocks": 4,
+    "reflation": 4,
+    "stagflation": 15,
+    "neutral": 15
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Consumer Staples Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B40B8R38",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUCS.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "util",
+   "ticker": "XLU",
+   "kind": "defensive",
+   "beta": "low",
+   "base": {
+    "goldilocks": 3,
+    "reflation": 2,
+    "stagflation": 12,
+    "neutral": 13
+   },
+   "ucits": {
+    "name": "iShares S&P 500 Utilities Sector UCITS ETF USD (Acc)",
+    "isin": "IE00B4KBBD01",
+    "isin_verified": true,
+    "ter": 0.15,
+    "yahoo": "IUUS.L",
+    "pea": false,
+    "approx": false
+   }
+  },
+  {
+   "key": "re",
+   "ticker": "XLRE",
+   "kind": "defensive",
+   "beta": "low",
+   "base": {
+    "goldilocks": 6,
+    "reflation": 7,
+    "stagflation": 4,
+    "neutral": 7
+   },
+   "ucits": {
+    "name": "SPDR Dow Jones Global Real Estate UCITS ETF (Dist), approximation mondiale faute d'ETF UCITS immobilier S&P 500 historique",
+    "isin": "IE00B8GF1M35",
+    "isin_verified": true,
+    "ter": 0.4,
+    "yahoo": null,
+    "pea": false,
+    "approx": true
+   }
+  }
+ ],
+ "asset_classes": {
+  "keys": [
+   "actions",
+   "obligations",
+   "or_matieres",
+   "immobilier",
+   "cash"
+  ],
+  "targets": {
+   "goldilocks": {
+    "actions": 70,
+    "obligations": 10,
+    "or_matieres": 5,
+    "immobilier": 10,
+    "cash": 5
+   },
+   "reflation": {
+    "actions": 60,
+    "obligations": 5,
+    "or_matieres": 15,
+    "immobilier": 10,
+    "cash": 10
+   },
+   "stagflation": {
+    "actions": 35,
+    "obligations": 15,
+    "or_matieres": 20,
+    "immobilier": 10,
+    "cash": 20
+   },
+   "neutral": {
+    "actions": 45,
+    "obligations": 30,
+    "or_matieres": 5,
+    "immobilier": 10,
+    "cash": 10
+   }
+  },
+  "equity_to_cash_per_tier": 5,
+  "all_weather": {
+   "actions": 30,
+   "obligations": 55,
+   "or_matieres": 15,
+   "immobilier": 0,
+   "cash": 0
+  }
+ },
+ "envelopes": {
+  "keys": [
+   "PEA",
+   "CTO",
+   "AV",
+   "PER",
+   "SCPI"
+  ],
+  "sell_priority": [
+   "AV",
+   "PER",
+   "PEA",
+   "SCPI",
+   "CTO"
+  ],
+  "buy_priority": {
+   "actions": [
+    "PEA",
+    "AV",
+    "PER",
+    "CTO"
+   ],
+   "obligations": [
+    "AV",
+    "PER",
+    "CTO"
+   ],
+   "or_matieres": [
+    "AV",
+    "CTO",
+    "PER"
+   ],
+   "immobilier": [
+    "SCPI",
+    "AV"
+   ],
+   "cash": [
+    "AV",
+    "CTO"
+   ]
+  }
+ },
+ "regime_stats_default": {
+  "_doc": "Rendement annuel nominal et volatilité annuelle par régime, valeurs pédagogiques par défaut. Remplacées par backtest.json (regime_stats) quand il est disponible.",
+  "goldilocks": {
+   "mu": 0.14,
+   "sigma": 0.12
+  },
+  "reflation": {
+   "mu": 0.09,
+   "sigma": 0.15
+  },
+  "stagflation": {
+   "mu": 0.02,
+   "sigma": 0.19
+  },
+  "neutral": {
+   "mu": 0.05,
+   "sigma": 0.17
+  }
+ },
+ "transition_fallback_1m": {
+  "goldilocks": {
+   "goldilocks": 0.92,
+   "reflation": 0.04,
+   "stagflation": 0.01,
+   "neutral": 0.03
+  },
+  "reflation": {
+   "goldilocks": 0.05,
+   "reflation": 0.91,
+   "stagflation": 0.03,
+   "neutral": 0.01
+  },
+  "stagflation": {
+   "goldilocks": 0.01,
+   "reflation": 0.04,
+   "stagflation": 0.9,
+   "neutral": 0.05
+  },
+  "neutral": {
+   "goldilocks": 0.05,
+   "reflation": 0.01,
+   "stagflation": 0.03,
+   "neutral": 0.91
+  }
+ },
+ "backtest": {
+  "cost_bps_per_traded_notional": 10,
+  "risk_free_annual": 0.0,
+  "rebalance": "regime_change_and_month_start",
+  "weekly_sampling": 5,
+  "game_case_step": 30,
+  "max_game_cases": 150
+ },
+ "freshness": {
+  "snapshot_session_hours": 3,
+  "snapshot_offhours_hours": 30,
+  "snapshot_weekend_hours": 80,
+  "cape_days": 75,
+  "backtest_days": 12,
+  "transitions_days": 12,
+  "yellow_factor": 2.0
+ }
+}
