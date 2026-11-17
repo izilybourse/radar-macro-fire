@@ -1,0 +1,11 @@
+# À placer dans le dossier Hostinger qui reçoit les JSON (option déploiement FTP).
+# Nécessaire car le widget peut s'exécuter dans une iframe sandboxée (origine "null") : il faut des en-têtes CORS ouverts.
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "*"
+  Header set Access-Control-Allow-Methods "GET, OPTIONS"
+  Header set Cache-Control "no-cache, must-revalidate"
+</IfModule>
+<IfModule mod_mime.c>
+  AddType application/json .json
+  AddType application/atom+xml .xml
+</IfModule>

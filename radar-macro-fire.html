@@ -1,0 +1,1339 @@
+<!-- Radar Macro FIRE : widget autonome pour module HTML Hostinger. Voir DEPLOIEMENT.md -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prosto+One&display=swap');
+#rmf{--bg:#000000;--bg2:#0B0B0B;--card:#111111;--card2:#181818;--bd:#2a2a2a;--tx:#ffffff;--tx2:#A0A0A0;--or:#FF5500;--ok:#22c55e;--wa:#f5b301;--ko:#ef4444;--bl:#60a5fa;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--tx);background:var(--bg);line-height:1.5;font-size:15px;
+  width:100%;max-width:100%;margin:0 auto;padding:16px max(14px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));box-sizing:border-box;overflow-x:hidden;-webkit-text-size-adjust:100%}
+#rmf[data-theme="light"]{--bg:#ffffff;--bg2:#f5f5f5;--card:#ffffff;--card2:#f3f3f3;--bd:#dcdcdc;--tx:#111111;--tx2:#555555;--or:#E64A00}
+#rmf *,#rmf *::before,#rmf *::after{box-sizing:border-box;min-width:0}
+#rmf .in{max-width:1120px;margin:0 auto}
+#rmf h1,#rmf h2,#rmf h3{font-family:"Prosto One",Inter,sans-serif;font-weight:400;color:var(--or);margin:0;letter-spacing:.2px}
+#rmf h1{font-size:clamp(26px,5.5vw,40px);text-align:center;line-height:1.15}
+#rmf h2{font-size:clamp(18px,3.6vw,22px);margin-bottom:10px}
+#rmf h3{font-size:16px;margin-bottom:8px}
+#rmf .sub{text-align:center;color:var(--tx2);max-width:880px;margin:10px auto 14px;text-wrap:balance;font-size:clamp(14px,2.4vw,16px)}
+#rmf a{color:var(--or)}
+#rmf button,#rmf select,#rmf input,#rmf textarea{font-family:inherit;font-size:16px;color:var(--tx)}
+#rmf .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--card2);cursor:pointer;text-decoration:none;color:var(--tx);font-weight:600;font-size:14px;-webkit-tap-highlight-color:transparent}
+#rmf .btn:hover{border-color:var(--or)}
+#rmf .btn.pri{background:var(--or);border-color:var(--or);color:#fff}
+#rmf .btn.sm{min-height:44px;padding:6px 12px}
+#rmf .bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px}
+#rmf .bar .sp{flex:1 1 0}
+#rmf select,#rmf input[type=text],#rmf input[type=number],#rmf textarea{min-height:44px;background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;width:100%}
+#rmf textarea{min-height:110px;resize:vertical}
+#rmf .bar select{width:auto}
+#rmf .strip{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;font-size:13px;color:var(--tx2);margin-bottom:10px}
+#rmf .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--tx2);vertical-align:middle;margin-right:6px}
+#rmf .dot.ok{background:var(--ok)}#rmf .dot.warn{background:var(--wa)}#rmf .dot.bad{background:var(--ko)}
+#rmf .note{background:var(--card2);border:1px solid var(--bd);border-left:3px solid var(--or);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--tx2);margin:0 0 10px}
+#rmf .note.bad{border-left-color:var(--ko)}#rmf .note.warn{border-left-color:var(--wa)}
+#rmf .tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:thin;-webkit-overflow-scrolling:touch;margin-bottom:6px}
+#rmf .tab{flex:0 0 auto;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid var(--bd);background:var(--card);cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap}
+#rmf .tab[aria-selected=true]{background:var(--or);border-color:var(--or);color:#fff}
+#rmf .panel{display:none}#rmf .panel.on{display:block}
+#rmf .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin:0 0 12px}
+#rmf .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+#rmf .grid.s{grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}
+#rmf .grid>.card{margin:0}
+#rmf .kpi{background:var(--card2);border:1px solid var(--bd);border-radius:12px;padding:10px 12px}
+#rmf .kpi b{display:block;font-size:20px;font-family:"Prosto One",Inter,sans-serif;font-weight:400}
+#rmf .kpi span{font-size:12px;color:var(--tx2)}
+#rmf .mut{color:var(--tx2);font-size:13px}
+#rmf .hero{text-align:center}
+#rmf .hero .rn{font-family:"Prosto One",Inter,sans-serif;font-size:clamp(28px,7vw,44px);line-height:1.1;margin:4px 0}
+#rmf .dots{font-size:26px;letter-spacing:6px}
+#rmf .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--bd);background:var(--card2);white-space:nowrap}
+#rmf .badge.g{color:var(--ok);border-color:var(--ok)}#rmf .badge.y{color:var(--wa);border-color:var(--wa)}#rmf .badge.r{color:var(--ko);border-color:var(--ko)}#rmf .badge.o{color:var(--or);border-color:var(--or)}
+#rmf .meter{height:10px;background:var(--card2);border:1px solid var(--bd);border-radius:6px;position:relative;overflow:hidden}
+#rmf .meter>i{display:block;height:100%;background:var(--or)}
+#rmf .ax{position:relative;height:12px;background:var(--card2);border:1px solid var(--bd);border-radius:6px;overflow:hidden}
+#rmf .ax::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--tx2)}
+#rmf .ax>i{position:absolute;top:0;bottom:0}
+#rmf .tk{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--tx2)}
+#rmf .row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}
+#rmf .row:last-child{border-bottom:0}
+#rmf .row>span:last-child{text-align:right}
+#rmf .rt{width:100%;border-collapse:collapse}
+#rmf .rt th,#rmf .rt td{padding:8px 8px;text-align:left;border-bottom:1px solid var(--bd);font-size:14px;vertical-align:middle}
+#rmf .rt th{color:var(--tx2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+#rmf .rt td.n,#rmf .rt th.n{text-align:right}
+#rmf details{border:1px solid var(--bd);border-radius:12px;background:var(--card);margin:0 0 8px}
+#rmf summary{cursor:pointer;padding:12px 14px;min-height:44px;font-weight:600;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
+#rmf summary::-webkit-details-marker{display:none}
+#rmf summary::after{content:"+";color:var(--or);font-size:20px}
+#rmf details[open]>summary::after{content:"\2212"}
+#rmf details>.bd{padding:0 14px 14px}
+#rmf .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+#rmf .chip{min-height:44px;padding:6px 14px;border-radius:999px;border:1px solid var(--bd);background:var(--card2);cursor:pointer;font-size:14px;font-weight:600}
+#rmf .chip.on{border-color:var(--or);color:var(--or)}
+#rmf .fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--tx2)}
+#rmf .fld input,#rmf .fld select{color:var(--tx)}
+#rmf .cv{width:100%;display:block;touch-action:pan-y}
+#rmf .tip{position:absolute;pointer-events:none;background:var(--card2);border:1px solid var(--bd);border-radius:8px;padding:6px 8px;font-size:12px;display:none;z-index:3;max-width:70%}
+#rmf .cvw{position:relative}
+#rmf .stack{display:flex;height:22px;border-radius:6px;overflow:hidden;border:1px solid var(--bd)}
+#rmf .stack>i{display:block;height:100%}
+#rmf .leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--tx2);margin-top:6px}
+#rmf .leg b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+#rmf .hm{padding:2px 8px;border-radius:6px;display:inline-block;min-width:64px;text-align:right}
+#rmf .tw{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--or);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;z-index:50;display:none;max-width:90%;text-align:center}
+#rmf .mod{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:60;display:none;align-items:center;justify-content:center;padding:16px}
+#rmf .mod.on{display:flex}
+#rmf .mod>div{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;width:min(560px,100%)}
+#rmf .foot{margin-top:16px;font-size:12px;color:var(--tx2);text-align:center}
+#rmf .pbl{display:none}
+#rmf .gq{display:flex;flex-direction:column;gap:8px}
+#rmf .ans{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px}
+@media (max-width:640px){
+  #rmf .rt thead{display:none}
+  #rmf .rt,#rmf .rt tbody,#rmf .rt tr,#rmf .rt td{display:block;width:100%}
+  #rmf .rt tr{background:var(--card2);border:1px solid var(--bd);border-radius:12px;margin:0 0 10px;padding:6px 2px}
+  #rmf .rt td{display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;padding:5px 10px;text-align:right}
+  #rmf .rt td::before{content:attr(data-label);color:var(--tx2);font-size:12px;flex:0 0 auto;max-width:46%;text-align:left}
+  #rmf .rt td.n{text-align:right}
+  #rmf .bar .btn{flex:1 1 auto}
+}
+@media print{
+  body *{visibility:hidden !important}
+  #rmf,#rmf .pbl,#rmf .pbl *{visibility:visible !important}
+  #rmf>.in>*:not(.pbl){display:none !important}
+  #rmf .pbl{display:block !important;position:absolute;left:0;top:0;width:100%;color:#000;background:#fff;padding:16px}
+  #rmf .pbl h1,#rmf .pbl h2{color:#E64A00}
+  #rmf .pbl table{width:100%;border-collapse:collapse}
+  #rmf .pbl td,#rmf .pbl th{border:1px solid #999;padding:4px 6px;font-size:12px;text-align:left}
+}
+</style>
+<div id="rmf" data-theme="dark" lang="fr">
+<div class="in">
+  <div class="bar" id="rmf-nav">
+    <a class="btn" data-go="home" href="https://izilyfire.fr" target="_top" rel="noopener"><span data-i="nav.home">Accueil</span></a>
+    <a class="btn" data-go="play" href="https://izilyfire.fr/izilyplay" target="_top" rel="noopener"><span data-i="nav.play">Retour à Izily Play</span></a>
+    <a class="btn" data-go="coach" href="https://izilyfire.fr/services" target="_top" rel="noopener"><span data-i="nav.coach">Coachings</span></a>
+    <span class="sp"></span>
+    <button type="button" class="btn" data-act="theme" id="rmf-theme" aria-label="Thème"></button>
+    <select id="rmf-lang" aria-label="Langue"><option value="fr">FR</option><option value="en">EN</option><option value="de">DE</option></select>
+  </div>
+  <h1 data-i="title">Le Radar Macro FIRE</h1>
+  <p class="sub" data-i="subtitle"></p>
+  <div id="rmf-banners"></div>
+  <div class="strip" id="rmf-strip"></div>
+  <div class="tabs" id="rmf-tabs" role="tablist"></div>
+  <div id="rmf-panels"></div>
+  <p class="foot" data-i="disclaimer"></p>
+  <div class="pbl" id="rmf-print"></div>
+</div>
+<div class="tw" id="rmf-toast"></div>
+<div class="mod" id="rmf-modal"><div><h3 id="rmf-modal-t"></h3><textarea id="rmf-modal-ta" readonly></textarea><div class="bar" style="margin:10px 0 0"><button type="button" class="btn pri" data-act="modal-close"><span data-i="close">Fermer</span></button></div></div></div>
+</div>
+<script>
+(function(){
+'use strict';
+const SPEC_FALLBACK = {"version":1,"_doc":"Source unique de vérité du Radar Macro FIRE. Lu par scripts/radar.py ET par le widget. Le calcul officiel se fait dans le script, le widget affiche.","windows":{"long":252,"short":126,"ma_short":50,"ma_long":200,"momentum_1m":21,"momentum_3m":63,"range_6m":126,"cape_proxy":1000,"concentration_mean":252},"tickers":{"growth":["SPY","HYG","TLT"],"inflation":["GSG","TIP","IEF"],"bubble":["QQQ","VTI","RSP","^VIX","^TNX","^IRX"],"benchmarks":["VT","SPY"],"all_weather_extra":["GLD","DBC"]},"growth":{"_doc":"G = 100 * (w12*s12 + w6*s6 + wH*sH - wT*penT) / (w12+w6+wH+wT). Chaque s est un rendement divisé par son échelle puis plafonné à [-cap, +cap]. penT vaut max(0, -rendement TLT 6M / echelle) plafonné à 1 : un effondrement des obligations longues (hausse des taux) pénalise la croissance.","spy12":{"weight":0.35,"scale":0.2},"spy6":{"weight":0.25,"scale":0.12,"cap":1.0,"_doc":"Remplace spy6Capped : plafond explicite de la contribution à +/- cap, jamais un plafond caché sur la valeur brute."},"hyg6":{"weight":0.25,"scale":0.04},"tlt_penalty":{"weight":0.15,"scale":0.1}},"inflation":{"_doc":"I = 100 * (w12*c12 + w6*c6 + wB*cB) / (w12+w6+wB). cB = rendement relatif TIP moins IEF sur 6 mois (proxy de point mort d'inflation).","gsg12":{"weight":0.35,"scale":0.2},"gsg6":{"weight":0.35,"scale":0.12},"breakeven6":{"weight":0.3,"scale":0.03}},"thresholds":{"axis_zero":0.0,"ambiguity_band":10.0,"_doc":"Quadrant : G>=0 et I<0 Goldilocks, G>=0 et I>=0 Reflation, G<0 et I>=0 Stagflation, G<0 et I<0 Neutre. Zone ambiguë stagflation/reflation : |G|<=bande et I>bande. Zone ambiguë goldilocks/stagflation : |G|<=bande ET |I|<=bande, régime brut goldilocks ou stagflation."},"confidence":{"base":40,"slope":0.8,"min":40,"max":92,"ambiguity_penalty":12,"macro_max_adjust":8,"floor":20,"ceiling":95},"inertia":{"required_days":3},"regimes":["goldilocks","reflation","stagflation","neutral"],"fred":{"series":["CPIAUCSL","INDPRO","PAYEMS","GDPNOW","ICSA","BAMLH0A0HYM2","T10Y2Y","DGS10","DGS2"],"lookback_days":900,"growth_weights":{"INDPRO":0.2,"PAYEMS":0.2,"GDPNOW":0.2,"ICSA":0.15,"BAMLH0A0HYM2":0.15,"T10Y2Y":0.1},"inflation_weights":{"cpi_yoy":0.6,"cpi_3m":0.4},"scales":{"indpro_yoy":0.03,"payems_yoy_center":0.005,"payems_yoy_scale":0.01,"gdpnow_center":1.5,"gdpnow_scale":2.0,"icsa_scale":0.15,"hy_center":4.5,"hy_scale":2.0,"curve_scale":1.0,"cpi_center":0.025,"cpi_yoy_scale":0.015,"cpi_3m_scale":0.02},"min_abs_for_override":0.25,"neutral_band":0.1},"bubble":{"weights":{"valuation":0.25,"euphoria":0.2,"debt":0.2,"liquidity":0.2,"concentration":0.15},"tiers":[40,55,70],"valuation":{"cape_low":15,"cape_high":40,"proxy_scale":0.5},"euphoria":{"vix_calm":12,"vix_stress":25,"breadth_low":0.5,"breadth_high":1.0},"debt":{"hy_tight":2.8,"hy_wide":5.5,"proxy_dd_scale":0.08},"liquidity":{"slope_tight":1.0,"slope_flat":-0.5,"direction_window":63,"direction_move":0.25,"bonus_resteepen":10,"bonus_flatten":5},"concentration":{"scale":0.15}},"allocation":{"tilt_per_tier":0.1,"ambiguity_extra_tiers":1,"blend_primary":0.5,"action_thresholds":{"reinforce":14.0,"overweight":10.5,"hold":7.0,"trim":4.0},"range_labels":{"low":0.33,"high":0.67}},"sectors":[{"key":"tech","ticker":"XLK","kind":"cyclical","beta":"high","base":{"goldilocks":22,"reflation":12,"stagflation":8,"neutral":15},"ucits":{"name":"iShares S&P 500 Information Technology Sector UCITS ETF USD (Acc)","isin":"IE00B3WJKG14","isin_verified":true,"ter":0.15,"yahoo":"IUIT.L","pea":false,"approx":false}},{"key":"comm","ticker":"XLC","kind":"cyclical","beta":"high","base":{"goldilocks":12,"reflation":4,"stagflation":3,"neutral":8},"ucits":{"name":"iShares S&P 500 Communication Sector UCITS ETF USD (Acc)","isin":"IE00BDDRF478","isin_verified":true,"ter":0.15,"yahoo":"IUCM.L","pea":false,"approx":false}},{"key":"disc","ticker":"XLY","kind":"cyclical","beta":"high","base":{"goldilocks":14,"reflation":8,"stagflation":3,"neutral":5},"ucits":{"name":"iShares S&P 500 Consumer Discretionary Sector UCITS ETF USD (Acc)","isin":"IE00B4MCHD36","isin_verified":false,"ter":0.15,"yahoo":"IUCD.L","pea":false,"approx":false}},{"key":"fin","ticker":"XLF","kind":"cyclical","beta":"mid","base":{"goldilocks":12,"reflation":14,"stagflation":6,"neutral":8},"ucits":{"name":"iShares S&P 500 Financials Sector UCITS ETF USD (Acc)","isin":"IE00B4JNQZ49","isin_verified":true,"ter":0.15,"yahoo":"IUFS.L","pea":false,"approx":false}},{"key":"ind","ticker":"XLI","kind":"cyclical","beta":"mid","base":{"goldilocks":10,"reflation":13,"stagflation":6,"neutral":6},"ucits":{"name":"iShares S&P 500 Industrials Sector UCITS ETF USD (Acc)","isin":"IE00B4LN9N13","isin_verified":false,"ter":0.15,"yahoo":"IUIS.L","pea":false,"approx":false}},{"key":"mat","ticker":"XLB","kind":"cyclical","beta":"mid","base":{"goldilocks":5,"reflation":12,"stagflation":8,"neutral":3},"ucits":{"name":"iShares S&P 500 Materials Sector UCITS ETF USD (Acc)","isin":"IE00B5MTWD60","isin_verified":false,"ter":0.15,"yahoo":"IUMS.L","pea":false,"approx":false}},{"key":"energy","ticker":"XLE","kind":"cyclical","beta":"mid","base":{"goldilocks":5,"reflation":18,"stagflation":20,"neutral":4},"ucits":{"name":"iShares S&P 500 Energy Sector UCITS ETF USD (Acc)","isin":"IE00B42NKQ00","isin_verified":true,"ter":0.15,"yahoo":"IUES.L","pea":false,"approx":false}},{"key":"health","ticker":"XLV","kind":"defensive","beta":"low","base":{"goldilocks":7,"reflation":6,"stagflation":15,"neutral":16},"ucits":{"name":"iShares S&P 500 Health Care Sector UCITS ETF USD (Acc)","isin":"IE00B43HR379","isin_verified":true,"ter":0.15,"yahoo":"IUHC.L","pea":false,"approx":false}},{"key":"staples","ticker":"XLP","kind":"defensive","beta":"low","base":{"goldilocks":4,"reflation":4,"stagflation":15,"neutral":15},"ucits":{"name":"iShares S&P 500 Consumer Staples Sector UCITS ETF USD (Acc)","isin":"IE00B40B8R38","isin_verified":true,"ter":0.15,"yahoo":"IUCS.L","pea":false,"approx":false}},{"key":"util","ticker":"XLU","kind":"defensive","beta":"low","base":{"goldilocks":3,"reflation":2,"stagflation":12,"neutral":13},"ucits":{"name":"iShares S&P 500 Utilities Sector UCITS ETF USD (Acc)","isin":"IE00B4KBBD01","isin_verified":false,"ter":0.15,"yahoo":"IUUS.L","pea":false,"approx":false}},{"key":"re","ticker":"XLRE","kind":"defensive","beta":"low","base":{"goldilocks":6,"reflation":7,"stagflation":4,"neutral":7},"ucits":{"name":"SPDR Dow Jones Global Real Estate UCITS ETF (Dist), approximation mondiale faute d'ETF UCITS immobilier S&P 500 historique","isin":"IE00B8GF1M35","isin_verified":true,"ter":0.4,"yahoo":null,"pea":false,"approx":true}}],"asset_classes":{"keys":["actions","obligations","or_matieres","immobilier","cash"],"targets":{"goldilocks":{"actions":70,"obligations":10,"or_matieres":5,"immobilier":10,"cash":5},"reflation":{"actions":60,"obligations":5,"or_matieres":15,"immobilier":10,"cash":10},"stagflation":{"actions":35,"obligations":15,"or_matieres":20,"immobilier":10,"cash":20},"neutral":{"actions":45,"obligations":30,"or_matieres":5,"immobilier":10,"cash":10}},"equity_to_cash_per_tier":5,"all_weather":{"actions":30,"obligations":55,"or_matieres":15,"immobilier":0,"cash":0}},"envelopes":{"keys":["PEA","CTO","AV","PER","SCPI"],"sell_priority":["AV","PER","PEA","SCPI","CTO"],"buy_priority":{"actions":["PEA","AV","PER","CTO"],"obligations":["AV","PER","CTO"],"or_matieres":["AV","CTO","PER"],"immobilier":["SCPI","AV"],"cash":["AV","CTO"]}},"regime_stats_default":{"_doc":"Rendement annuel nominal et volatilité annuelle par régime, valeurs pédagogiques par défaut. Remplacées par backtest.json (regime_stats) quand il est disponible.","goldilocks":{"mu":0.14,"sigma":0.12},"reflation":{"mu":0.09,"sigma":0.15},"stagflation":{"mu":0.02,"sigma":0.19},"neutral":{"mu":0.05,"sigma":0.17}},"transition_fallback_1m":{"goldilocks":{"goldilocks":0.92,"reflation":0.04,"stagflation":0.01,"neutral":0.03},"reflation":{"goldilocks":0.05,"reflation":0.91,"stagflation":0.03,"neutral":0.01},"stagflation":{"goldilocks":0.01,"reflation":0.04,"stagflation":0.9,"neutral":0.05},"neutral":{"goldilocks":0.05,"reflation":0.01,"stagflation":0.03,"neutral":0.91}},"backtest":{"cost_bps_per_traded_notional":10,"risk_free_annual":0.0,"rebalance":"regime_change_and_month_start","weekly_sampling":5,"game_case_step":30,"max_game_cases":150},"freshness":{"snapshot_session_hours":3,"snapshot_offhours_hours":30,"snapshot_weekend_hours":80,"cape_days":75,"backtest_days":12,"transitions_days":12,"yellow_factor":2.0}};
+/* ============================================================================
+   DICTIONNAIRE i18n : FR (défaut), EN, DE. Aucun tiret dans les textes affichés.
+   ========================================================================== */
+const I18N = {};
+I18N.fr = {
+  "title": "Le Radar Macro FIRE",
+  "subtitle": "Régime macro, risque de bulle et allocation sectorielle, recalculés automatiquement à partir de données de marché et de données macro réelles.",
+  "disclaimer": "Outil pédagogique, pas un conseil en investissement personnalisé. Les performances passées ne préjugent pas des performances futures. Sources des données : Yahoo Finance, FRED (Réserve fédérale de Saint Louis), Robert Shiller. Les données ont l'âge du dernier calcul, pas du temps réel.",
+  "nav.home": "Accueil", "nav.play": "Retour à Izily Play", "nav.coach": "Coachings",
+  "theme.light": "Thème clair", "theme.dark": "Thème sombre", "close": "Fermer", "nd": "n.d.", "days": "j", "pts": "pts", "yr": "ans",
+  "copy": "Copier", "copied": "Copié dans le presse papiers", "copy.manual": "Copiez ce texte (Ctrl C)", "saved": "Fichier {f} enregistré", "open": "Ouvrir", "delete": "Supprimer", "loading": "Chargement", "refresh": "Actualiser", "updated": "Mis à jour le",
+  "ago.m": "il y a {n} min", "ago.h": "il y a {n} h", "ago.d": "il y a {n} j",
+  "missing.file": "Fichier {f} indisponible pour le moment. Le reste de la page reste utilisable.",
+  "render.error": "Cet onglet n'a pas pu s'afficher", "storage.blocked": "Le stockage local est bloqué par votre navigateur ou l'iframe : vos réglages, votre journal et vos scores ne seront conservés que jusqu'à la fermeture de la page. Pensez à exporter.",
+  "banner.demo": "DONNÉES DE DÉMONSTRATION : ces chiffres sont synthétiques et ne reflètent pas le marché.",
+  "banner.nosnap": "Aucun snapshot lisible à l'adresse {u}. Vérifiez l'URL des données et le premier lancement du workflow.",
+  "banner.override": "Les données macro réelles contredisent totalement le signal de marché sur les deux axes : le régime brut a basculé sur la lecture macro.",
+  "banner.age": "Honnêteté sur la fraîcheur : les données ont l'âge du dernier calcul affiché, au mieux 30 minutes en séance. Ce n'est pas du temps réel. Le bouton Actualiser recharge simplement les fichiers publiés.",
+  "strip.ok": "Données à jour", "strip.warn": "Données à surveiller", "strip.bad": "Données périmées", "strip.calc": "Dernier calcul", "strip.asof": "Dernière séance",
+  "stale.snapshot": "Le snapshot a {a} : il est plus ancien que prévu.", "stale.cape": "Le CAPE de Shiller a {a} : il dépasse 75 jours.", "stale.backtest": "Le backtest a {a} : il dépasse 12 jours.", "stale.transitions": "La matrice de transition a {a} : elle dépasse 12 jours.",
+  "state.ok": "À jour", "state.warn": "À surveiller", "state.bad": "Périmé", "state.missing": "Absent",
+  "tab.radar": "Radar", "tab.alloc": "Allocation", "tab.heat": "Heatmap", "tab.sectors": "Secteurs", "tab.backtest": "Backtest", "tab.history": "Historique", "tab.wealth": "Patrimoine", "tab.compare": "Comparer", "tab.stress": "Stress test FIRE", "tab.game": "Jeu", "tab.journal": "Journal et alertes", "tab.method": "Méthode et FAQ",
+  "reg.goldilocks": "Goldilocks", "reg.reflation": "Reflation", "reg.stagflation": "Stagflation", "reg.neutral": "Neutre",
+  "reg.goldilocks.d": "Croissance solide et inflation contenue : l'environnement le plus favorable aux actions de croissance et aux secteurs cycliques.",
+  "reg.reflation.d": "Croissance et inflation en hausse : l'énergie, la finance, l'industrie et les matériaux prennent le relais.",
+  "reg.stagflation.d": "Croissance faible et inflation forte : l'énergie, les valeurs défensives et les matières premières résistent mieux.",
+  "reg.neutral.d": "Croissance faible et inflation en retrait : ralentissement ou désinflation, les secteurs défensifs et la qualité dominent.",
+  "act.reinforce": "Renforcer", "act.overweight": "Surpondérer", "act.hold": "Conserver", "act.trim": "Alléger", "act.avoid": "Éviter",
+  "range.low": "Bas de range 6M", "range.mid": "Milieu de range 6M", "range.high": "Haut de range 6M",
+  "tier.0": "Risque faible", "tier.1": "Risque modéré", "tier.2": "Risque élevé", "tier.3": "Risque extrême",
+  "kind.cyclical": "Cyclique", "kind.defensive": "Défensif",
+  "axis.g": "Croissance", "axis.i": "Inflation", "proxy": "proxy", "source": "Source",
+  "radar.current": "Régime confirmé", "radar.stable": "Régime stable, aucune transition en cours", "radar.pending": "Transition vers {to} : {n} jour(s) confirmé(s) sur {req}", "radar.rawdiff": "Le signal brut du jour indique {raw}, pas encore un jour de confirmation.",
+  "radar.conf": "Fiabilité", "radar.since": "depuis le {d}", "radar.dist": "avant bascule ({ax})", "radar.bubble": "Risque de bulle", "radar.bubble.t": "Indice de risque de bulle", "radar.quad": "Position dans les quatre régimes",
+  "radar.map": "Carte des régimes", "radar.signals": "Signaux de marché", "radar.signals.d": "Rendements utilisés par le script (SPY, HYG, TLT pour la croissance, GSG et TIP moins IEF pour l'inflation).",
+  "radar.amb.gold_stag": "Zone ambiguë entre Goldilocks et Stagflation : l'allocation est un mélange prudent des deux, avec un biais défensif.",
+  "radar.amb.stag_refl": "Zone ambiguë entre Stagflation et Reflation : l'allocation est un mélange prudent des deux, avec un biais défensif.",
+  "radar.macro": "Confirmation par les données macro réelles (FRED)", "macro.na": "Les données FRED ne sont pas disponibles : le régime repose sur le marché seul.",
+  "macro.sum": "Ajustement de fiabilité : {adj} points. Croissance : {g}. Inflation : {i}.", "agree.1": "confirmée", "agree.0": "neutre", "agree.-1": "en désaccord",
+  "col.series": "Série", "col.value": "Valeur", "col.date": "Date", "col.detail": "Détail", "d.yoy": "sur 1 an", "d.ann3m": "3 mois annualisé", "d.avg4": "moyenne 4 sem.",
+  "fred.CPIAUCSL": "Prix à la consommation", "fred.INDPRO": "Production industrielle", "fred.PAYEMS": "Emplois non agricoles", "fred.GDPNOW": "GDPNow (Atlanta Fed)", "fred.ICSA": "Inscriptions chômage", "fred.BAMLH0A0HYM2": "Spread obligations haut rendement", "fred.T10Y2Y": "Pente 10 ans moins 2 ans", "fred.DGS10": "Taux 10 ans", "fred.DGS2": "Taux 2 ans",
+  "comp.spy12": "S&P 500 12 mois", "comp.spy6": "S&P 500 6 mois", "comp.hyg6": "Haut rendement 6 mois", "comp.tlt6": "Obligations longues 6 mois", "comp.gsg12": "Matières premières 12 mois", "comp.gsg6": "Matières premières 6 mois", "comp.be6": "Point mort inflation 6 mois",
+  "pil.valuation": "Valorisation", "pil.euphoria": "Euphorie", "pil.debt": "Endettement", "pil.liquidity": "Liquidité", "pil.concentration": "Concentration",
+  "pil.valuation.d": "Plus le CAPE de Shiller est élevé, plus le marché est cher.", "pil.euphoria.d": "VIX bas et marché large au dessus de sa moyenne 50 jours : signe d'euphorie.", "pil.debt.d": "Spreads de crédit serrés : le marché sous estime le risque de crédit.", "pil.liquidity.d": "Courbe plate ou inversée : liquidité plus tendue.", "pil.concentration.d": "Les grandes valeurs écrasent le reste du marché.",
+  "btn.pdf": "Exporter en PDF", "btn.share": "Partager", "btn.copytsv": "Copier (TSV)", "print.date": "Calcul du", "print.blocked": "Impression bloquée dans ce cadre : ouvrez la page dans un nouvel onglet.",
+  "share.text": "Radar Macro FIRE : régime {reg}, risque de bulle {b} sur 100. Secteurs prioritaires : {top}. Outil pédagogique.",
+  "alloc.title": "Allocation sectorielle cible", "alloc.regime": "Régime utilisé", "alloc.tilt": "Paliers défensifs", "alloc.blend": "Mélange prudent de {a} et {b}.", "alloc.sorted": "Trié par priorité : poids cible décroissant, puis momentum 3 mois.", "alloc.capital": "Capital à répartir (EUR)",
+  "col.sector": "Secteur", "col.action": "Action", "col.weight": "Poids cible", "col.amount": "Montant", "col.base": "Base", "col.range": "Position 6M", "col.etf": "ETF UCITS (ISIN)", "col.ter": "TER", "col.pea": "PEA", "col.rank": "Rang", "col.kind": "Type", "col.regime": "Régime", "col.class": "Classe d'actifs", "col.env": "Enveloppe", "col.file": "Fichier", "col.age": "Âge", "col.state": "État", "col.source": "Source",
+  "pea.yes": "Éligible PEA", "pea.no": "Non éligible PEA", "etf.unverified": "ISIN à vérifier sur justETF", "etf.approx": "Approximation",
+  "alloc.pea.note": "Aucun de ces ETF sectoriels américains UCITS n'est éligible au PEA. Pour le PEA, privilégiez un ETF éligible plus large. Vérifiez toujours l'éligibilité, le TER et l'ISIN chez votre courtier ou sur justETF.",
+  "alloc.etf.note": "Les ETF indiqués sont des exemples pédagogiques d'ETF UCITS iShares, pas une recommandation personnalisée. Le point d'interrogation signale un ISIN à contrôler.",
+  "heat.title": "Heatmap sectorielle", "heat.d": "Momentum 1, 3 et 6 mois, force relative contre le S&P 500, position par rapport aux moyennes mobiles 50 et 200 jours.", "heat.all": "Tous", "heat.def": "Défensifs", "heat.cyc": "Cycliques", "heat.sort": "Trier par",
+  "hm.weight": "Poids cible", "hm.mom_1m": "Momentum 1M", "hm.mom_3m": "Momentum 3M", "hm.mom_6m": "Momentum 6M", "hm.rel_strength_3m": "Force relative 3M", "hm.vs_ma50": "Écart MM50", "hm.vs_ma200": "Écart MM200",
+  "sect.title": "Pages sectorielles", "sect.d": "Ouvrez un secteur pour voir son contexte selon chaque régime, son ETF, sa performance et ses risques.", "sect.now": "régime actuel", "sect.ctx": "Contexte par régime", "sect.perf": "Performance", "sect.etf": "ETF", "sect.proxy": "ETF US de référence pour le backtest", "sect.risks": "Risques",
+  "ctx.strong": "Poids de base élevé ({w} %) : secteur favorisé dans ce régime.", "ctx.neutral": "Poids de base proche de la moyenne ({w} %) : secteur sans biais marqué.", "ctx.weak": "Poids de base réduit ({w} %) : secteur peu favorisé dans ce régime.",
+  "sec.tech": "Technologie", "sec.comm": "Communication", "sec.disc": "Consommation discrétionnaire", "sec.fin": "Finance", "sec.ind": "Industrie", "sec.mat": "Matériaux", "sec.energy": "Énergie", "sec.health": "Santé", "sec.staples": "Consommation de base", "sec.util": "Services publics", "sec.re": "Immobilier coté",
+  "sec.tech.d": "Logiciels, semi conducteurs et matériel : moteur de croissance des indices, très sensible aux taux.", "sec.comm.d": "Médias, plateformes et télécoms : mélange de croissance publicitaire et de rendement.", "sec.disc.d": "Distribution, automobile, loisirs : dépend de la consommation et du crédit des ménages.", "sec.fin.d": "Banques, assurances, gestion d'actifs : profitent d'une courbe pentue et d'un cycle sain.", "sec.ind.d": "Aéronautique, transport, machines : suit le cycle d'investissement.", "sec.mat.d": "Chimie, métaux, emballages : lié aux matières premières et à la demande mondiale.", "sec.energy.d": "Pétrole et gaz : protège souvent quand l'inflation vient des matières premières.", "sec.health.d": "Laboratoires, équipements, assurance santé : demande stable, défensif.", "sec.staples.d": "Alimentation, hygiène, distribution de base : revenus réguliers, défensif.", "sec.util.d": "Électricité, gaz, eau : dividendes stables, sensible aux taux longs.", "sec.re.d": "Foncières cotées : rendement élevé, très sensible aux taux.",
+  "sec.tech.r": "Valorisations élevées, concentration sur quelques géants, forte sensibilité à la hausse des taux.", "sec.comm.r": "Concentration sur peu de valeurs, risque réglementaire, cycle publicitaire.", "sec.disc.r": "Consommation qui ralentit, crédit plus cher, forte concentration sur quelques valeurs.", "sec.fin.r": "Défauts de crédit, courbe inversée, régulation et stress bancaire.", "sec.ind.r": "Ralentissement du cycle industriel, coûts de l'énergie et des intrants.", "sec.mat.r": "Chute de la demande chinoise, baisse des cours, dollar fort.", "sec.energy.r": "Volatilité du pétrole, transition énergétique, ralentissement de la demande.", "sec.health.r": "Risque politique sur les prix des médicaments, expirations de brevets.", "sec.staples.r": "Sous performance en marché haussier, pression des marges, inflation des coûts.", "sec.util.r": "Hausse des taux longs, dette élevée, risque réglementaire.", "sec.re.r": "Hausse des taux, refinancement, bureaux et commerces fragiles.",
+  "bt.title": "Backtest du portefeuille du radar", "bt.d": "Courbe base 100 contre actions mondiales (VT) et S&P 500, avec les bandes de régime en fond.", "bt.honest": "Backtest rétrospectif : l'historique des ETF UCITS est court, un ETF US du même indice prolonge la série avant leur lancement. Résultats purement indicatifs.",
+  "bt.t.net": "Net de frais", "bt.t.vt": "VT", "bt.t.spy": "S&P 500", "bt.t.bands": "Bandes de régime", "bt.win": "Fenêtre", "bt.win.full": "Historique complet depuis {a}", "bt.win.ucits": "Fenêtre ETF UCITS réels depuis {a}",
+  "bt.radar": "Radar brut", "bt.radar.net": "Radar net", "bt.metrics": "Métriques", "bt.metrics.u": "Métriques sur la fenêtre ETF UCITS réels", "bt.metrics.u.d": "Période où presque tous les ETF UCITS recommandés existent réellement.", "bt.alpha": "Alpha par régime", "bt.alpha.d": "Rendement annualisé du portefeuille moins celui de VT, mesuré les jours passés dans chaque régime.", "bt.share": "Part du temps",
+  "bt.turn": "Rotation", "bt.turn.a": "Rotation annuelle", "bt.turn.c": "Changements de régime", "bt.turn.d": "Rotation à sens unique en pourcentage du portefeuille par an.", "bt.universe": "ETF utilisés", "bt.universe.d": "Date de début des vrais ETF UCITS. Avant cette date, l'ETF US de référence sert d'indice de comparaison.", "bt.ucits.start": "Début ETF UCITS", "bt.proxy": "ETF US de référence", "bt.noucits": "Pas d'équivalent UCITS", "bt.limits": "Méthode et limites",
+  "m.metric": "Mesure", "m.total_return": "Rendement total", "m.cagr": "Rendement annualisé", "m.vol": "Volatilité", "m.sharpe": "Ratio de Sharpe", "m.max_drawdown": "Perte maximale", "m.win_rate_monthly": "Mois gagnants",
+  "hist.prob": "Probabilités de transition", "hist.prob.d": "Probabilité de chaque régime dans les 3 mois, depuis {r}, d'après l'historique long.", "hist.stay": "(rester)", "hist.fallback": "matrice indisponible : probabilités de repli calculées à partir d'une matrice mensuelle générique.", "hist.dist": "Distance du signal au seuil", "hist.dist.d": "Il manque {p} points sur l'axe {ax} pour changer de quadrant (croissance {G}, inflation {I}).",
+  "hist.matrix": "Matrice de transition à 3 mois", "hist.from": "De ↓ vers →", "hist.dur": "Durée moyenne", "hist.list": "Historique des changements de régime", "hist.list.d": "Ajouts uniquement lors d'un changement confirmé. Les entrées reconstituées viennent du rejeu de l'historique.", "hist.change": "Changement", "hist.elapsed": "Durée du régime", "hist.spy": "SPY depuis", "hist.port": "Portefeuille depuis", "hist.boot": "reconstitué", "hist.perf.d": "Portefeuille à poids figés : poids de base du nouveau régime au jour du changement, sans rééquilibrage.",
+  "we.title": "Mon patrimoine contre la cible du régime", "we.d": "Comparez votre exposition réelle (PEA, CTO, assurance vie, PER, SCPI) à l'allocation cible par classe d'actifs du régime courant.", "we.privacy": "Aucune donnée personnelle ne passe par un serveur tiers : votre navigateur lit directement votre Google Sheets (le fichier doit être partagé en lecture par lien) et les montants restent dans le stockage local de votre appareil. L'identifiant du fichier n'est jamais écrit dans le code de la page.",
+  "we.sheetid": "Identifiant ou lien du Google Sheets", "we.sheetname": "Nom de l'onglet (facultatif)", "we.load": "Charger mon Google Sheets", "we.clear": "Effacer mes données", "we.noid": "Saisissez l'identifiant ou le lien du fichier.", "we.saved": "Dernier enregistrement local : {d} ({s}).", "we.src.manual": "saisie manuelle", "we.src.sheet": "Google Sheets",
+  "we.map": "Colonnes à utiliser", "we.none": "Aucune", "we.amount": "Montant", "we.mapfail": "Colonnes non reconnues : choisissez les colonnes ci dessous ou utilisez la saisie manuelle.", "we.loaded": "{n} lignes lues.", "we.assumed": "{n} lignes d'assurance vie ou de PER sans classe d'actifs ont été comptées en actions.", "we.err": "Lecture impossible : vérifiez le partage en lecture par lien ou utilisez la saisie manuelle",
+  "we.manual": "Saisie manuelle par enveloppe", "we.manual.d": "Montants en euros par enveloppe et par classe d'actifs. Enregistré uniquement sur cet appareil.", "we.res": "Écarts et suggestions", "we.empty": "Renseignez vos montants (Google Sheets ou saisie manuelle) pour voir les écarts.", "we.gap": "Écarts par classe d'actifs", "we.actual": "Réel", "we.target": "Cible du régime", "we.diff": "Écart (points)", "we.diffe": "Écart (EUR)",
+  "we.sugg": "Suggestions de rééquilibrage par enveloppe", "we.ok": "Votre allocation est proche de la cible du régime : aucun arbitrage notable.", "we.move": "Arbitrer environ {amt} de {a} (enveloppe {ea}) vers {b} (enveloppe {eb}).", "we.flow": "Orienter environ {amt} de nouveaux versements vers {c} (enveloppe {e}).",
+  "we.h.cto": "Vendre en CTO déclenche la fiscalité sur les plus values : privilégiez les nouveaux versements.", "we.h.pea": "Dans un PEA, seuls les ETF éligibles sont possibles.", "we.h.scpi": "L'immobilier passe par des SCPI ou des supports d'assurance vie.", "we.h.peasell": "Un retrait du PEA avant 5 ans a des conséquences fiscales.", "we.h.flow": "Pour limiter les frais et la fiscalité, commencez par les nouveaux versements avant de vendre.",
+  "we.byenv": "Répartition par enveloppe", "we.share": "Part", "we.disc": "Suggestions pédagogiques indicatives, à adapter à votre fiscalité et à vos contraintes.",
+  "cls.actions": "Actions", "cls.obligations": "Obligations", "cls.or_matieres": "Or et matières premières", "cls.immobilier": "Immobilier", "cls.cash": "Liquidités",
+  "cmp.title": "Comparer trois allocations", "cmp.d": "Mon allocation, l'allocation cible du radar et l'All Weather, par classe d'actifs.", "cmp.nomine": "Renseignez vos montants dans l'onglet Patrimoine pour voir votre allocation.", "cmp.mine": "Mon allocation", "cmp.radar": "Radar", "cmp.gap.r": "Écart vs radar", "cmp.gap.a": "Écart vs All Weather", "cmp.note": "L'All Weather est ici une allocation de référence : 30 % actions, 55 % obligations, 15 % or et matières premières. La partie actions du radar se détaille ensuite en 11 secteurs.",
+  "st.title": "Stress test FIRE", "st.d": "Simulation Monte Carlo dans votre navigateur : le régime courant et des transitions possibles sont appliqués à votre plan (capital, épargne, date cible, retraits).", "st.start": "Régime de départ :", "st.src": "Transitions : {a}. Rendements par régime : {b}.", "st.src.m.emp": "matrice empirique", "st.src.m.fb": "matrice de repli générique", "st.src.s.bt": "mesurés par le backtest", "st.src.s.def": "valeurs pédagogiques par défaut",
+  "st.cap": "Capital actuel (EUR)", "st.save": "Épargne mensuelle (EUR)", "st.years": "Années jusqu'à la cible", "st.spend": "Dépenses annuelles (EUR)", "st.swr": "Taux de retrait visé (%)", "st.ret": "Durée de la retraite (années)", "st.infl": "Inflation (%)", "st.eq": "Part actions (%)", "st.n": "Nombre de simulations", "st.run": "Lancer la simulation", "st.running": "Calcul en cours",
+  "st.res": "Résultats", "st.res.d": "Capital cible {t} (dépenses divisées par le taux de retrait), {n} simulations par scénario, en euros constants.", "st.scen": "Scénario", "st.preach": "Cible atteinte", "st.psurv": "Retraite tenue", "st.pplan": "Plan complet", "st.med": "Capital médian à la cible (10e et 90e centile)",
+  "st.sc.markov": "Régime courant puis transitions", "st.sc.stress": "Choc : stagflation pendant 24 mois", "st.sc.persist": "Régime courant figé", "st.fan": "Courbe affichée", "st.fan.d": "Zone claire : 10e à 90e centile. Zone foncée : 25e à 75e centile. Ligne pointillée : capital cible.", "st.limits": "Modèle simplifié : rendements aléatoires par régime, sans fiscalité, sans corrélation entre actions et autres actifs. Un résultat n'est pas une prévision.",
+  "gm.title": "Devine le régime", "gm.d": "Dix manches : à partir des signaux d'une date passée, retrouvez le régime détecté par le radar.", "gm.best": "Meilleur score", "gm.beststreak": "Meilleure série", "gm.games": "Parties", "gm.acc": "Réussite", "gm.start": "Nouvelle partie", "gm.again": "Rejouer", "gm.end": "Partie terminée", "gm.end.d": "{c} bonnes réponses sur {n}.",
+  "gm.round": "Manche {i} sur {n}", "gm.score": "Score", "gm.streak": "Série", "gm.q": "Quel régime le radar détectait il ?", "gm.ok": "Bonne réponse.", "gm.ko": "Raté.", "gm.reveal": "Régime : {r}. Date : {d}. Croissance {G}, inflation {I}.", "gm.next": "Manche suivante", "gm.finish": "Voir le score",
+  "gm.share": "Code de partage", "gm.share.d": "Copiez votre code pour le comparer avec des amis. Aucun classement n'est enregistré sur un serveur.", "gm.friend": "Code d'un ami", "gm.badcode": "Code invalide.", "gm.you": "Vous", "gm.friendn": "Ami",
+  "jr.title": "Journal de décisions", "jr.d": "Notez vos arbitrages avec le régime du moment, pour relire vos décisions plus tard.", "jr.local": "Les notes restent sur cet appareil. Pour ne rien perdre en changeant d'appareil, exportez le fichier JSON puis importez le ailleurs.", "jr.note": "Nouvelle note", "jr.ph": "Ex. : renforcé la santé, allégé la technologie", "jr.add": "Ajouter au journal", "jr.ctx": "Contexte enregistré :", "jr.none": "Aucune note pour le moment.",
+  "jr.io": "Export et import", "jr.io.d": "Le fichier est téléchargé et le contenu apparaît aussi dans la zone ci dessous, à copier si le téléchargement est bloqué.", "jr.exp": "Exporter en JSON", "jr.file": "Choisir un fichier", "jr.imp": "Importer le texte", "jr.io.ph": "Collez ici le contenu d'un export JSON pour l'importer", "jr.imported": "{n} note(s) importée(s).", "jr.badjson": "Fichier ou texte invalide.",
+  "al.title": "Alertes de changement de régime", "al.d": "Un flux Atom et un email sont émis à chaque changement de régime confirmé.", "al.limit": "Limite : sans serveur d'authentification, il est impossible de réserver les alertes aux membres Premium. Elles sont ouvertes à tous.", "al.rss": "Flux Atom (lecteur RSS)", "al.mail": "Alerte par email", "al.signup": "S'inscrire aux alertes", "al.nocfg": "Le formulaire d'inscription n'est pas encore configuré (voir le guide de déploiement).", "al.optin": "Double confirmation et désinscription gérées par le service d'envoi.",
+  "me.title": "Méthode, état des données et FAQ", "me.d": "Tout le détail du modèle, des sources et des limites.", "me.data": "État des données", "data.sources": "Sources", "data.spec": "Paramètres du modèle : {s}.", "data.base": "Adresse des données :", "data.errs": "Fichiers non lus", "spec.distant": "model_spec.json chargé depuis les données", "spec.repli": "repli codé en dur dans le widget",
+  "src.prices": "Prix (Yahoo, Stooq)", "src.fred": "Macro FRED", "src.cape": "CAPE Shiller", "srcst.ok": "OK", "srcst.repli": "Repli", "srcst.indisponible": "Indisponible",
+  "me.regime": "Détection du régime", "me.regime.1": "Deux axes sont calculés par le script Python, pas par le navigateur. Fenêtres : {L} jours de bourse (12 mois) et {S} jours (6 mois).",
+  "me.regime.2": "Croissance G : rendement S&P 500 12 mois (poids {w12}), S&P 500 6 mois (poids {w6}, contribution plafonnée explicitement à plus ou moins {cap}), haut rendement 6 mois (poids {wh}), moins une pénalité obligations longues (poids {wt}) quand elles s'effondrent. Chaque rendement est divisé par une échelle puis plafonné. G va de moins 100 à plus 100. Cette formule remplace l'ancien plafonnement implicite spy6Capped.",
+  "me.regime.3": "Inflation I : matières premières 12 mois (poids {a}), matières premières 6 mois (poids {b}) et rendement relatif TIP moins IEF sur 6 mois, proxy du point mort d'inflation (poids {c}).",
+  "me.regime.4": "Quadrants : G positif et I négatif Goldilocks, G et I positifs Reflation, G négatif et I positif Stagflation, G et I négatifs Neutre. Zones ambiguës (bande de {band} points) entre stagflation et reflation, et entre goldilocks et stagflation : l'allocation devient un mélange prudent plus défensif.",
+  "me.regime.5": "Une seule source de vérité : tous les paramètres sont dans model_spec.json, lu par le script et par ce widget. Le calcul officiel est fait par le script, le widget affiche.",
+  "me.macro": "Confirmation macro FRED", "me.macro.1": "Le script lit neuf séries FRED (CPIAUCSL, INDPRO, PAYEMS, GDPNOW, ICSA moyenne 4 semaines, BAMLH0A0HYM2, T10Y2Y, DGS10, DGS2) et en tire un score macro de croissance et d'inflation. Chaque axe confirmé augmente la fiabilité, chaque axe contredit la diminue, pour un ajustement total de plus ou moins {max} points.", "me.macro.2": "Si les deux axes contredisent totalement le marché avec des scores macro assez marqués, le régime brut bascule sur la lecture macro. Les données macro sont publiées avec retard : elles confirment, elles ne devancent pas.",
+  "me.inertia": "Inertie du régime", "me.inertia.1": "Un nouveau régime n'est confirmé qu'après {n} jours de bourse consécutifs. L'état (régime courant, candidat, compteur) est conservé dans state.json et n'avance qu'une fois par jour, à l'exécution de clôture. Le badge de points affiche le compteur.", "me.inertia.2": "Entre deux clôtures, le widget montre le signal brut du moment mais ne change jamais le régime confirmé.",
+  "me.bubble": "Indice de risque de bulle", "me.bubble.1": "Indice de 0 à 100, cinq piliers pondérés (en pourcentage) : {w}. Paliers : {tiers}.", "me.bubble.2": "Valorisation : CAPE de Shiller. Euphorie : VIX bas et breadth des 11 secteurs au dessus de leur MM50. Endettement : spread haut rendement FRED. Liquidité : pente 10 ans moins 2 ans avec nuance directionnelle. Concentration : QQQ sur VTI et SPY sur RSP. Quand une donnée manque, un proxy est utilisé et marqué.",
+  "me.alloc": "Allocation sectorielle", "me.alloc.1": "Chaque régime a des poids de base pour les 11 secteurs. Selon le palier de bulle, les secteurs défensifs sont renforcés et les secteurs à bêta élevé allégés de {tilt} % par palier, puis les poids sont renormalisés à 100. Une zone ambiguë ajoute un palier prudent.", "me.alloc.2": "Étiquettes selon le poids final : Renforcer à partir de {r} %, Surpondérer {o} %, Conserver {h} %, Alléger {t} %, Éviter en dessous.",
+  "me.bt": "Backtest", "me.bt.1": "Le backtest applique les poids de base du régime confirmé la veille (signal de marché seul, sans FRED, inertie incluse), rééquilibre à chaque changement de régime et chaque début de mois. Les ETF UCITS recommandés sont utilisés sur toute la période où ils existent, l'ETF US du même indice les prolonge avant leur lancement.", "me.bt.2": "La version nette retire {c} points de base par notionnel échangé et le différentiel de frais sur la partie reconstituée. Aucune fiscalité, aucun effet de change EUR.",
+  "me.src": "Sources et fraîcheur", "me.src.1": "Prix : Yahoo Finance (repli Stooq). Macro : FRED. CAPE : Robert Shiller (repli multpl.com). Les calculs sont faits par des workflows GitHub Actions planifiés et publiés en fichiers JSON statiques.", "me.src.2": "Les données ont l'âge du dernier calcul, au mieux 30 minutes en séance. Ce n'est pas du temps réel.",
+  "me.legal": "Avertissement", "me.legal.1": "Outil pédagogique, pas un conseil en investissement personnalisé. Il ne tient compte ni de votre situation, ni de vos objectifs, ni de votre fiscalité.", "me.legal.2": "Les performances passées ne préjugent pas des performances futures. Un investissement en actions peut entraîner une perte en capital.",
+  "faq.title": "Questions fréquentes",
+  "faq.1.q": "Pourquoi le régime ne change t il pas tout de suite ?", "faq.1.a": "Pour éviter les faux signaux, un nouveau régime doit être confirmé trois jours de bourse de suite.",
+  "faq.2.q": "Que signifie la zone ambiguë ?", "faq.2.a": "Le signal est proche d'une frontière entre deux régimes. L'allocation devient un mélange prudent des deux régimes avec un biais défensif.",
+  "faq.3.q": "Pourquoi un indice de bulle élevé change t il l'allocation ?", "faq.3.a": "Un risque de bulle élevé renforce les secteurs défensifs et allège les secteurs à bêta élevé, sans prédire un krach.",
+  "faq.4.q": "Les ETF sont ils éligibles au PEA ?", "faq.4.a": "Les ETF sectoriels UCITS américains listés ne sont pas éligibles au PEA. Le PEA convient à un ETF éligible plus large. Vérifiez toujours l'éligibilité chez votre courtier.",
+  "faq.5.q": "Les chiffres sont ils en temps réel ?", "faq.5.a": "Non. Ils ont l'âge du dernier calcul affiché en haut de page, au mieux 30 minutes en séance.",
+  "faq.6.q": "Mes données patrimoniales sont elles envoyées quelque part ?", "faq.6.a": "Non. Le Google Sheets est lu directement par votre navigateur et les montants restent dans le stockage local de votre appareil.",
+  "faq.7.q": "Que faire si un fichier est périmé ?", "faq.7.a": "Le widget affiche un voyant jaune ou rouge et une alerte. Vous pouvez lancer le workflow à la main dans GitHub Actions.",
+  "faq.8.q": "Le backtest garantit il l'avenir ?", "faq.8.a": "Non. Il est rétrospectif, limité par l'historique des ETF et ne couvre ni la fiscalité ni le change."
+};
+
+I18N.en = {
+  "title": "The FIRE Macro Radar",
+  "subtitle": "Macro regime, bubble risk and sector allocation, recalculated automatically from market data and real macro data.",
+  "disclaimer": "Educational tool, not personalised investment advice. Past performance does not predict future results. Data sources: Yahoo Finance, FRED (Federal Reserve Bank of St. Louis), Robert Shiller. Data is as old as the last calculation, not real time.",
+  "nav.home": "Home", "nav.play": "Back to Izily Play", "nav.coach": "Coaching",
+  "theme.light": "Light theme", "theme.dark": "Dark theme", "close": "Close", "nd": "n/a", "days": "d", "pts": "pts", "yr": "yrs",
+  "copy": "Copy", "copied": "Copied to clipboard", "copy.manual": "Copy this text (Ctrl C)", "saved": "File {f} saved", "open": "Open", "delete": "Delete", "loading": "Loading", "refresh": "Refresh", "updated": "Updated on",
+  "ago.m": "{n} min ago", "ago.h": "{n} h ago", "ago.d": "{n} d ago",
+  "missing.file": "File {f} is unavailable for now. The rest of the page still works.",
+  "render.error": "This tab could not be displayed", "storage.blocked": "Local storage is blocked by your browser or the iframe: settings, journal and scores are kept only until the page closes. Remember to export.",
+  "banner.demo": "DEMO DATA: these figures are synthetic and do not reflect the market.",
+  "banner.nosnap": "No readable snapshot at {u}. Check the data URL and the first workflow run.",
+  "banner.override": "Real macro data fully contradicts the market signal on both axes: the raw regime switched to the macro reading.",
+  "banner.age": "Honest note on freshness: data is as old as the last calculation shown, at best 30 minutes during the session. It is not real time. The Refresh button simply reloads the published files.",
+  "strip.ok": "Data up to date", "strip.warn": "Data to watch", "strip.bad": "Data stale", "strip.calc": "Last calculation", "strip.asof": "Last session",
+  "stale.snapshot": "The snapshot is {a} old: older than expected.", "stale.cape": "Shiller CAPE is {a} old: beyond 75 days.", "stale.backtest": "The backtest is {a} old: beyond 12 days.", "stale.transitions": "The transition matrix is {a} old: beyond 12 days.",
+  "state.ok": "Up to date", "state.warn": "To watch", "state.bad": "Stale", "state.missing": "Missing",
+  "tab.radar": "Radar", "tab.alloc": "Allocation", "tab.heat": "Heatmap", "tab.sectors": "Sectors", "tab.backtest": "Backtest", "tab.history": "History", "tab.wealth": "Wealth", "tab.compare": "Compare", "tab.stress": "FIRE stress test", "tab.game": "Game", "tab.journal": "Journal and alerts", "tab.method": "Method and FAQ",
+  "reg.goldilocks": "Goldilocks", "reg.reflation": "Reflation", "reg.stagflation": "Stagflation", "reg.neutral": "Neutral",
+  "reg.goldilocks.d": "Solid growth and contained inflation: the most favourable setting for growth stocks and cyclical sectors.",
+  "reg.reflation.d": "Growth and inflation both rising: energy, financials, industrials and materials take the lead.",
+  "reg.stagflation.d": "Weak growth and high inflation: energy, defensives and commodities hold up better.",
+  "reg.neutral.d": "Weak growth and fading inflation: slowdown or disinflation, defensive sectors and quality dominate.",
+  "act.reinforce": "Reinforce", "act.overweight": "Overweight", "act.hold": "Hold", "act.trim": "Trim", "act.avoid": "Avoid",
+  "range.low": "Low of 6M range", "range.mid": "Middle of 6M range", "range.high": "High of 6M range",
+  "tier.0": "Low risk", "tier.1": "Moderate risk", "tier.2": "High risk", "tier.3": "Extreme risk",
+  "kind.cyclical": "Cyclical", "kind.defensive": "Defensive",
+  "axis.g": "Growth", "axis.i": "Inflation", "proxy": "proxy", "source": "Source",
+  "radar.current": "Confirmed regime", "radar.stable": "Stable regime, no transition under way", "radar.pending": "Transition to {to}: {n} of {req} days confirmed", "radar.rawdiff": "Today's raw signal says {raw}, not yet a confirmation day.",
+  "radar.conf": "Reliability", "radar.since": "since {d}", "radar.dist": "before a switch ({ax})", "radar.bubble": "Bubble risk", "radar.bubble.t": "Bubble risk index", "radar.quad": "Position across the four regimes",
+  "radar.map": "Regime map", "radar.signals": "Market signals", "radar.signals.d": "Returns used by the script (SPY, HYG, TLT for growth; GSG and TIP minus IEF for inflation).",
+  "radar.amb.gold_stag": "Ambiguous zone between Goldilocks and Stagflation: the allocation is a cautious blend of both, with a defensive tilt.",
+  "radar.amb.stag_refl": "Ambiguous zone between Stagflation and Reflation: the allocation is a cautious blend of both, with a defensive tilt.",
+  "radar.macro": "Confirmation by real macro data (FRED)", "macro.na": "FRED data is unavailable: the regime relies on the market alone.",
+  "macro.sum": "Reliability adjustment: {adj} points. Growth: {g}. Inflation: {i}.", "agree.1": "confirmed", "agree.0": "neutral", "agree.-1": "disagrees",
+  "col.series": "Series", "col.value": "Value", "col.date": "Date", "col.detail": "Detail", "d.yoy": "1 year", "d.ann3m": "3M annualised", "d.avg4": "4 week avg",
+  "fred.CPIAUCSL": "Consumer prices", "fred.INDPRO": "Industrial production", "fred.PAYEMS": "Nonfarm payrolls", "fred.GDPNOW": "GDPNow (Atlanta Fed)", "fred.ICSA": "Jobless claims", "fred.BAMLH0A0HYM2": "High yield spread", "fred.T10Y2Y": "10 year minus 2 year slope", "fred.DGS10": "10 year yield", "fred.DGS2": "2 year yield",
+  "comp.spy12": "S&P 500 12 months", "comp.spy6": "S&P 500 6 months", "comp.hyg6": "High yield 6 months", "comp.tlt6": "Long bonds 6 months", "comp.gsg12": "Commodities 12 months", "comp.gsg6": "Commodities 6 months", "comp.be6": "Inflation breakeven 6 months",
+  "pil.valuation": "Valuation", "pil.euphoria": "Euphoria", "pil.debt": "Debt", "pil.liquidity": "Liquidity", "pil.concentration": "Concentration",
+  "pil.valuation.d": "The higher Shiller CAPE is, the more expensive the market.", "pil.euphoria.d": "Low VIX and broad market above its 50 day average signal euphoria.", "pil.debt.d": "Tight credit spreads: the market underprices credit risk.", "pil.liquidity.d": "Flat or inverted curve: tighter liquidity.", "pil.concentration.d": "Mega caps dominate the rest of the market.",
+  "btn.pdf": "Export PDF", "btn.share": "Share", "btn.copytsv": "Copy (TSV)", "print.date": "Calculated on", "print.blocked": "Printing is blocked in this frame: open the page in a new tab.",
+  "share.text": "FIRE Macro Radar: {reg} regime, bubble risk {b} out of 100. Priority sectors: {top}. Educational tool.",
+  "alloc.title": "Target sector allocation", "alloc.regime": "Regime used", "alloc.tilt": "Defensive tiers", "alloc.blend": "Cautious blend of {a} and {b}.", "alloc.sorted": "Sorted by priority: target weight descending, then 3 month momentum.", "alloc.capital": "Capital to allocate (EUR)",
+  "col.sector": "Sector", "col.action": "Action", "col.weight": "Target weight", "col.amount": "Amount", "col.base": "Base", "col.range": "6M position", "col.etf": "UCITS ETF (ISIN)", "col.ter": "TER", "col.pea": "PEA", "col.rank": "Rank", "col.kind": "Type", "col.regime": "Regime", "col.class": "Asset class", "col.env": "Wrapper", "col.file": "File", "col.age": "Age", "col.state": "State", "col.source": "Source",
+  "pea.yes": "PEA eligible", "pea.no": "Not PEA eligible", "etf.unverified": "ISIN to check on justETF", "etf.approx": "Approximation",
+  "alloc.pea.note": "None of these US sector UCITS ETFs is PEA eligible (French equity savings plan). For a PEA, favour a broader eligible ETF. Always check eligibility, TER and ISIN with your broker or on justETF.",
+  "alloc.etf.note": "The ETFs shown are educational examples of iShares UCITS ETFs, not personalised advice. A question mark flags an ISIN to double check.",
+  "heat.title": "Sector heatmap", "heat.d": "1, 3 and 6 month momentum, relative strength versus the S&P 500, position against the 50 and 200 day moving averages.", "heat.all": "All", "heat.def": "Defensive", "heat.cyc": "Cyclical", "heat.sort": "Sort by",
+  "hm.weight": "Target weight", "hm.mom_1m": "1M momentum", "hm.mom_3m": "3M momentum", "hm.mom_6m": "6M momentum", "hm.rel_strength_3m": "3M relative strength", "hm.vs_ma50": "Gap to MA50", "hm.vs_ma200": "Gap to MA200",
+  "sect.title": "Sector pages", "sect.d": "Open a sector to see its context in each regime, its ETF, performance and risks.", "sect.now": "current regime", "sect.ctx": "Context by regime", "sect.perf": "Performance", "sect.etf": "ETF", "sect.proxy": "US reference ETF used for the backtest", "sect.risks": "Risks",
+  "ctx.strong": "High base weight ({w} %): sector favoured in this regime.", "ctx.neutral": "Base weight close to average ({w} %): no strong bias.", "ctx.weak": "Reduced base weight ({w} %): sector not favoured in this regime.",
+  "sec.tech": "Technology", "sec.comm": "Communication", "sec.disc": "Consumer discretionary", "sec.fin": "Financials", "sec.ind": "Industrials", "sec.mat": "Materials", "sec.energy": "Energy", "sec.health": "Health care", "sec.staples": "Consumer staples", "sec.util": "Utilities", "sec.re": "Listed real estate",
+  "sec.tech.d": "Software, semiconductors and hardware: the growth engine of the indices, very rate sensitive.", "sec.comm.d": "Media, platforms and telecoms: a mix of advertising growth and yield.", "sec.disc.d": "Retail, autos, leisure: depends on household spending and credit.", "sec.fin.d": "Banks, insurers, asset managers: benefit from a steep curve and a healthy cycle.", "sec.ind.d": "Aerospace, transport, machinery: follows the investment cycle.", "sec.mat.d": "Chemicals, metals, packaging: tied to commodities and global demand.", "sec.energy.d": "Oil and gas: often protects when inflation comes from commodities.", "sec.health.d": "Pharma, equipment, health insurance: steady demand, defensive.", "sec.staples.d": "Food, household goods, basic retail: regular income, defensive.", "sec.util.d": "Electricity, gas, water: stable dividends, sensitive to long rates.", "sec.re.d": "Listed property companies: high yield, very rate sensitive.",
+  "sec.tech.r": "Rich valuations, concentration in a few giants, strong sensitivity to rising rates.", "sec.comm.r": "Concentration in few names, regulatory risk, advertising cycle.", "sec.disc.r": "Slowing consumption, costlier credit, heavy concentration in a few names.", "sec.fin.r": "Credit losses, inverted curve, regulation and bank stress.", "sec.ind.r": "Industrial cycle slowdown, energy and input costs.", "sec.mat.r": "Weaker Chinese demand, falling prices, strong dollar.", "sec.energy.r": "Oil volatility, energy transition, slowing demand.", "sec.health.r": "Political risk on drug pricing, patent expiries.", "sec.staples.r": "Underperformance in bull markets, margin pressure, cost inflation.", "sec.util.r": "Rising long rates, high debt, regulatory risk.", "sec.re.r": "Rising rates, refinancing, fragile office and retail.",
+  "bt.title": "Radar portfolio backtest", "bt.d": "Base 100 curve against world equities (VT) and the S&P 500, with regime bands in the background.", "bt.honest": "Retrospective backtest: UCITS ETF history is short, a US ETF tracking the same index extends the series before their launch. Purely indicative.",
+  "bt.t.net": "Net of costs", "bt.t.vt": "VT", "bt.t.spy": "S&P 500", "bt.t.bands": "Regime bands", "bt.win": "Window", "bt.win.full": "Full history since {a}", "bt.win.ucits": "Real UCITS ETF window since {a}",
+  "bt.radar": "Radar gross", "bt.radar.net": "Radar net", "bt.metrics": "Metrics", "bt.metrics.u": "Metrics on the real UCITS ETF window", "bt.metrics.u.d": "Period where nearly all recommended UCITS ETFs actually exist.", "bt.alpha": "Alpha by regime", "bt.alpha.d": "Annualised portfolio return minus VT, measured on the days spent in each regime.", "bt.share": "Share of time",
+  "bt.turn": "Turnover", "bt.turn.a": "Annual turnover", "bt.turn.c": "Regime changes", "bt.turn.d": "One way turnover as a percentage of the portfolio per year.", "bt.universe": "ETFs used", "bt.universe.d": "Start date of the real UCITS ETFs. Before that date the US reference ETF is the comparison index.", "bt.ucits.start": "UCITS ETF start", "bt.proxy": "US reference ETF", "bt.noucits": "No UCITS equivalent", "bt.limits": "Method and limits",
+  "m.metric": "Measure", "m.total_return": "Total return", "m.cagr": "Annualised return", "m.vol": "Volatility", "m.sharpe": "Sharpe ratio", "m.max_drawdown": "Maximum drawdown", "m.win_rate_monthly": "Winning months",
+  "hist.prob": "Transition probabilities", "hist.prob.d": "Probability of each regime within 3 months, starting from {r}, based on the long history.", "hist.stay": "(stay)", "hist.fallback": "matrix unavailable: fallback probabilities computed from a generic monthly matrix.", "hist.dist": "Distance of the signal to the threshold", "hist.dist.d": "{p} points missing on the {ax} axis to change quadrant (growth {G}, inflation {I}).",
+  "hist.matrix": "3 month transition matrix", "hist.from": "From ↓ to →", "hist.dur": "Average duration", "hist.list": "Regime change history", "hist.list.d": "Entries are added only on a confirmed change. Reconstructed entries come from replaying the history.", "hist.change": "Change", "hist.elapsed": "Regime duration", "hist.spy": "SPY since", "hist.port": "Portfolio since", "hist.boot": "reconstructed", "hist.perf.d": "Frozen weight portfolio: base weights of the new regime on the change date, no rebalancing.",
+  "we.title": "My wealth against the regime target", "we.d": "Compare your real exposure (PEA, CTO, life insurance, PER, SCPI) with the regime's target allocation by asset class.", "we.privacy": "No personal data goes through a third party server: your browser reads your Google Sheets directly (the file must be shared as view by link) and amounts stay in your device's local storage. The file ID is never written in the page code.",
+  "we.sheetid": "Google Sheets ID or link", "we.sheetname": "Tab name (optional)", "we.load": "Load my Google Sheets", "we.clear": "Erase my data", "we.noid": "Enter the file ID or link.", "we.saved": "Last local save: {d} ({s}).", "we.src.manual": "manual entry", "we.src.sheet": "Google Sheets",
+  "we.map": "Columns to use", "we.none": "None", "we.amount": "Amount", "we.mapfail": "Columns not recognised: pick them below or use manual entry.", "we.loaded": "{n} rows read.", "we.assumed": "{n} life insurance or PER rows without an asset class were counted as equities.", "we.err": "Cannot read the file: check link sharing or use manual entry",
+  "we.manual": "Manual entry by wrapper", "we.manual.d": "Amounts in euros by wrapper and asset class. Saved on this device only.", "we.res": "Gaps and suggestions", "we.empty": "Enter your amounts (Google Sheets or manual) to see the gaps.", "we.gap": "Gaps by asset class", "we.actual": "Actual", "we.target": "Regime target", "we.diff": "Gap (points)", "we.diffe": "Gap (EUR)",
+  "we.sugg": "Rebalancing suggestions by wrapper", "we.ok": "Your allocation is close to the regime target: no notable trade.", "we.move": "Shift about {amt} from {a} (wrapper {ea}) to {b} (wrapper {eb}).", "we.flow": "Direct about {amt} of new contributions to {c} (wrapper {e}).",
+  "we.h.cto": "Selling in a CTO triggers capital gains tax: prefer new contributions.", "we.h.pea": "Inside a PEA only eligible ETFs are possible.", "we.h.scpi": "Real estate goes through SCPI funds or life insurance units.", "we.h.peasell": "Withdrawing from a PEA before 5 years has tax consequences.", "we.h.flow": "To limit costs and taxes, start with new contributions before selling.",
+  "we.byenv": "Breakdown by wrapper", "we.share": "Share", "we.disc": "Indicative educational suggestions, to adapt to your tax situation and constraints.",
+  "cls.actions": "Equities", "cls.obligations": "Bonds", "cls.or_matieres": "Gold and commodities", "cls.immobilier": "Real estate", "cls.cash": "Cash",
+  "cmp.title": "Compare three allocations", "cmp.d": "My allocation, the radar target and All Weather, by asset class.", "cmp.nomine": "Enter your amounts in the Wealth tab to see your allocation.", "cmp.mine": "My allocation", "cmp.radar": "Radar", "cmp.gap.r": "Gap vs radar", "cmp.gap.a": "Gap vs All Weather", "cmp.note": "All Weather is used here as a reference allocation: 30 % equities, 55 % bonds, 15 % gold and commodities. The radar's equity part is then split across 11 sectors.",
+  "st.title": "FIRE stress test", "st.d": "Monte Carlo simulation in your browser: the current regime and possible transitions are applied to your plan (capital, savings, target date, withdrawals).", "st.start": "Starting regime:", "st.src": "Transitions: {a}. Returns by regime: {b}.", "st.src.m.emp": "empirical matrix", "st.src.m.fb": "generic fallback matrix", "st.src.s.bt": "measured by the backtest", "st.src.s.def": "educational defaults",
+  "st.cap": "Current capital (EUR)", "st.save": "Monthly savings (EUR)", "st.years": "Years to target", "st.spend": "Annual spending (EUR)", "st.swr": "Target withdrawal rate (%)", "st.ret": "Retirement length (years)", "st.infl": "Inflation (%)", "st.eq": "Equity share (%)", "st.n": "Number of simulations", "st.run": "Run the simulation", "st.running": "Computing",
+  "st.res": "Results", "st.res.d": "Target capital {t} (spending divided by withdrawal rate), {n} simulations per scenario, in constant euros.", "st.scen": "Scenario", "st.preach": "Target reached", "st.psurv": "Retirement sustained", "st.pplan": "Full plan", "st.med": "Median capital at target (10th and 90th percentile)",
+  "st.sc.markov": "Current regime then transitions", "st.sc.stress": "Shock: stagflation for 24 months", "st.sc.persist": "Current regime frozen", "st.fan": "Curve shown", "st.fan.d": "Light band: 10th to 90th percentile. Dark band: 25th to 75th percentile. Dotted line: target capital.", "st.limits": "Simplified model: random returns by regime, no taxes, no correlation between equities and other assets. A result is not a forecast.",
+  "gm.title": "Guess the regime", "gm.d": "Ten rounds: from the signals of a past date, find the regime the radar detected.", "gm.best": "Best score", "gm.beststreak": "Best streak", "gm.games": "Games", "gm.acc": "Accuracy", "gm.start": "New game", "gm.again": "Play again", "gm.end": "Game over", "gm.end.d": "{c} correct answers out of {n}.",
+  "gm.round": "Round {i} of {n}", "gm.score": "Score", "gm.streak": "Streak", "gm.q": "Which regime did the radar detect?", "gm.ok": "Correct.", "gm.ko": "Missed.", "gm.reveal": "Regime: {r}. Date: {d}. Growth {G}, inflation {I}.", "gm.next": "Next round", "gm.finish": "See score",
+  "gm.share": "Share code", "gm.share.d": "Copy your code to compare with friends. No leaderboard is stored on a server.", "gm.friend": "A friend's code", "gm.badcode": "Invalid code.", "gm.you": "You", "gm.friendn": "Friend",
+  "jr.title": "Decision journal", "jr.d": "Write down your trades with the regime of the moment, to review your decisions later.", "jr.local": "Notes stay on this device. To lose nothing when changing device, export the JSON file and import it elsewhere.", "jr.note": "New note", "jr.ph": "E.g. added health care, trimmed technology", "jr.add": "Add to journal", "jr.ctx": "Saved context:", "jr.none": "No notes yet.",
+  "jr.io": "Export and import", "jr.io.d": "The file is downloaded and the content also appears in the box below, to copy if the download is blocked.", "jr.exp": "Export as JSON", "jr.file": "Choose a file", "jr.imp": "Import the text", "jr.io.ph": "Paste the content of a JSON export here to import it", "jr.imported": "{n} note(s) imported.", "jr.badjson": "Invalid file or text.",
+  "al.title": "Regime change alerts", "al.d": "An Atom feed and an email are issued at each confirmed regime change.", "al.limit": "Limit: without an authentication server, alerts cannot be restricted to Premium members. They are open to everyone.", "al.rss": "Atom feed (RSS reader)", "al.mail": "Email alert", "al.signup": "Subscribe to alerts", "al.nocfg": "The signup form is not configured yet (see the deployment guide).", "al.optin": "Double opt in and unsubscribe are handled by the email service.",
+  "me.title": "Method, data status and FAQ", "me.d": "Full detail of the model, sources and limits.", "me.data": "Data status", "data.sources": "Sources", "data.spec": "Model parameters: {s}.", "data.base": "Data address:", "data.errs": "Files not read", "spec.distant": "model_spec.json loaded from the data", "spec.repli": "hard coded fallback in the widget",
+  "src.prices": "Prices (Yahoo, Stooq)", "src.fred": "FRED macro", "src.cape": "Shiller CAPE", "srcst.ok": "OK", "srcst.repli": "Fallback", "srcst.indisponible": "Unavailable",
+  "me.regime": "Regime detection", "me.regime.1": "Two axes are computed by the Python script, not by the browser. Windows: {L} trading days (12 months) and {S} days (6 months).",
+  "me.regime.2": "Growth G: S&P 500 12 month return (weight {w12}), S&P 500 6 month (weight {w6}, contribution explicitly capped at plus or minus {cap}), high yield 6 month (weight {wh}), minus a long bond penalty (weight {wt}) when they collapse. Each return is divided by a scale then capped. G ranges from minus 100 to plus 100. This formula replaces the old implicit spy6Capped cap.",
+  "me.regime.3": "Inflation I: commodities 12 month (weight {a}), commodities 6 month (weight {b}) and relative return of TIP minus IEF over 6 months, a proxy for inflation breakeven (weight {c}).",
+  "me.regime.4": "Quadrants: positive G and negative I Goldilocks, positive G and I Reflation, negative G and positive I Stagflation, negative G and I Neutral. Ambiguous zones (band of {band} points) between stagflation and reflation, and between goldilocks and stagflation: the allocation becomes a cautious, more defensive blend.",
+  "me.regime.5": "A single source of truth: all parameters live in model_spec.json, read by the script and by this widget. The official calculation is done by the script, the widget displays.",
+  "me.macro": "FRED macro confirmation", "me.macro.1": "The script reads nine FRED series (CPIAUCSL, INDPRO, PAYEMS, GDPNOW, ICSA 4 week average, BAMLH0A0HYM2, T10Y2Y, DGS10, DGS2) and derives a macro growth and inflation score. Each confirming axis raises reliability, each contradicting axis lowers it, for a total adjustment of plus or minus {max} points.", "me.macro.2": "If both axes fully contradict the market with clear macro scores, the raw regime switches to the macro reading. Macro data is published with a lag: it confirms, it does not anticipate.",
+  "me.inertia": "Regime inertia", "me.inertia.1": "A new regime is confirmed only after {n} consecutive trading days. The state (current regime, candidate, counter) is kept in state.json and advances once a day, at the closing run. The dot badge shows the counter.", "me.inertia.2": "Between two closes, the widget shows the current raw signal but never changes the confirmed regime.",
+  "me.bubble": "Bubble risk index", "me.bubble.1": "Index from 0 to 100, five weighted pillars (in percent): {w}. Tiers: {tiers}.", "me.bubble.2": "Valuation: Shiller CAPE. Euphoria: low VIX and breadth of the 11 sectors above their 50 day average. Debt: FRED high yield spread. Liquidity: 10 year minus 2 year slope with a directional nuance. Concentration: QQQ over VTI and SPY over RSP. When data is missing, a proxy is used and flagged.",
+  "me.alloc": "Sector allocation", "me.alloc.1": "Each regime has base weights for the 11 sectors. Depending on the bubble tier, defensive sectors are raised and high beta sectors trimmed by {tilt} % per tier, then weights are renormalised to 100. An ambiguous zone adds one cautious tier.", "me.alloc.2": "Labels by final weight: Reinforce from {r} %, Overweight {o} %, Hold {h} %, Trim {t} %, Avoid below.",
+  "me.bt": "Backtest", "me.bt.1": "The backtest applies the base weights of the regime confirmed the previous day (market signal only, no FRED, inertia included), rebalancing at each regime change and each month start. The recommended UCITS ETFs are used over the whole period in which they exist; the US ETF on the same index extends them before launch.", "me.bt.2": "The net version deducts {c} basis points per traded notional and the fee differential on the reconstructed part. No taxes, no EUR currency effect.",
+  "me.src": "Sources and freshness", "me.src.1": "Prices: Yahoo Finance (Stooq fallback). Macro: FRED. CAPE: Robert Shiller (multpl.com fallback). Calculations run in scheduled GitHub Actions workflows and are published as static JSON files.", "me.src.2": "Data is as old as the last calculation, at best 30 minutes during the session. It is not real time.",
+  "me.legal": "Disclaimer", "me.legal.1": "Educational tool, not personalised investment advice. It does not take into account your situation, objectives or taxes.", "me.legal.2": "Past performance does not predict future results. Investing in equities can lead to a loss of capital.",
+  "faq.title": "Frequently asked questions",
+  "faq.1.q": "Why does the regime not change immediately?", "faq.1.a": "To avoid false signals, a new regime must be confirmed on three trading days in a row.",
+  "faq.2.q": "What does the ambiguous zone mean?", "faq.2.a": "The signal is close to a border between two regimes. The allocation becomes a cautious blend of both regimes with a defensive bias.",
+  "faq.3.q": "Why does a high bubble index change the allocation?", "faq.3.a": "High bubble risk raises defensive sectors and trims high beta sectors, without predicting a crash.",
+  "faq.4.q": "Are the ETFs PEA eligible?", "faq.4.a": "The listed US sector UCITS ETFs are not PEA eligible. A PEA suits a broader eligible ETF. Always check eligibility with your broker.",
+  "faq.5.q": "Are the figures real time?", "faq.5.a": "No. They are as old as the last calculation shown at the top of the page, at best 30 minutes during the session.",
+  "faq.6.q": "Is my wealth data sent anywhere?", "faq.6.a": "No. Google Sheets is read directly by your browser and amounts stay in your device's local storage.",
+  "faq.7.q": "What if a file is stale?", "faq.7.a": "The widget shows a yellow or red light and an alert. You can run the workflow by hand in GitHub Actions.",
+  "faq.8.q": "Does the backtest guarantee the future?", "faq.8.a": "No. It is retrospective, limited by ETF history, and covers neither taxes nor currency."
+};
+
+I18N.de = {
+  "title": "Das FIRE Makro Radar",
+  "subtitle": "Makroregime, Blasenrisiko und Sektorallokation, automatisch neu berechnet aus Marktdaten und echten Makrodaten.",
+  "disclaimer": "Bildungswerkzeug, keine personalisierte Anlageberatung. Frühere Wertentwicklung ist kein Indikator für die Zukunft. Datenquellen: Yahoo Finance, FRED (Federal Reserve Bank of St. Louis), Robert Shiller. Die Daten sind so alt wie die letzte Berechnung, keine Echtzeit.",
+  "nav.home": "Startseite", "nav.play": "Zurück zu Izily Play", "nav.coach": "Coachings",
+  "theme.light": "Helles Design", "theme.dark": "Dunkles Design", "close": "Schließen", "nd": "k. A.", "days": "T", "pts": "Pkt", "yr": "J",
+  "copy": "Kopieren", "copied": "In die Zwischenablage kopiert", "copy.manual": "Diesen Text kopieren (Strg C)", "saved": "Datei {f} gespeichert", "open": "Öffnen", "delete": "Löschen", "loading": "Lädt", "refresh": "Aktualisieren", "updated": "Aktualisiert am",
+  "ago.m": "vor {n} Min.", "ago.h": "vor {n} Std.", "ago.d": "vor {n} T",
+  "missing.file": "Datei {f} ist derzeit nicht verfügbar. Der Rest der Seite funktioniert weiter.",
+  "render.error": "Dieser Tab konnte nicht angezeigt werden", "storage.blocked": "Lokaler Speicher ist durch Ihren Browser oder das iframe blockiert: Einstellungen, Journal und Punktestände bleiben nur bis zum Schließen der Seite. Bitte exportieren.",
+  "banner.demo": "DEMODATEN: Diese Zahlen sind synthetisch und spiegeln nicht den Markt.",
+  "banner.nosnap": "Kein lesbarer Snapshot unter {u}. Prüfen Sie die Daten URL und den ersten Workflow Lauf.",
+  "banner.override": "Echte Makrodaten widersprechen dem Marktsignal auf beiden Achsen vollständig: Das Rohregime wurde auf die Makrolesung umgestellt.",
+  "banner.age": "Ehrlicher Hinweis zur Aktualität: Die Daten sind so alt wie die angezeigte letzte Berechnung, höchstens 30 Minuten während der Handelszeit. Das ist keine Echtzeit. Die Schaltfläche Aktualisieren lädt nur die veröffentlichten Dateien neu.",
+  "strip.ok": "Daten aktuell", "strip.warn": "Daten beobachten", "strip.bad": "Daten veraltet", "strip.calc": "Letzte Berechnung", "strip.asof": "Letzte Sitzung",
+  "stale.snapshot": "Der Snapshot ist {a} alt: älter als erwartet.", "stale.cape": "Das Shiller CAPE ist {a} alt: über 75 Tage.", "stale.backtest": "Der Backtest ist {a} alt: über 12 Tage.", "stale.transitions": "Die Übergangsmatrix ist {a} alt: über 12 Tage.",
+  "state.ok": "Aktuell", "state.warn": "Beobachten", "state.bad": "Veraltet", "state.missing": "Fehlt",
+  "tab.radar": "Radar", "tab.alloc": "Allokation", "tab.heat": "Heatmap", "tab.sectors": "Sektoren", "tab.backtest": "Backtest", "tab.history": "Verlauf", "tab.wealth": "Vermögen", "tab.compare": "Vergleichen", "tab.stress": "FIRE Stresstest", "tab.game": "Spiel", "tab.journal": "Journal und Alarme", "tab.method": "Methode und FAQ",
+  "reg.goldilocks": "Goldilocks", "reg.reflation": "Reflation", "reg.stagflation": "Stagflation", "reg.neutral": "Neutral",
+  "reg.goldilocks.d": "Solides Wachstum und gedämpfte Inflation: das günstigste Umfeld für Wachstumsaktien und zyklische Sektoren.",
+  "reg.reflation.d": "Wachstum und Inflation steigen: Energie, Finanzen, Industrie und Rohstoffe übernehmen die Führung.",
+  "reg.stagflation.d": "Schwaches Wachstum und hohe Inflation: Energie, Defensive und Rohstoffe halten sich besser.",
+  "reg.neutral.d": "Schwaches Wachstum und nachlassende Inflation: Abschwung oder Disinflation, defensive Sektoren und Qualität dominieren.",
+  "act.reinforce": "Aufstocken", "act.overweight": "Übergewichten", "act.hold": "Halten", "act.trim": "Reduzieren", "act.avoid": "Meiden",
+  "range.low": "Unteres Ende der 6M Spanne", "range.mid": "Mitte der 6M Spanne", "range.high": "Oberes Ende der 6M Spanne",
+  "tier.0": "Geringes Risiko", "tier.1": "Mäßiges Risiko", "tier.2": "Hohes Risiko", "tier.3": "Extremes Risiko",
+  "kind.cyclical": "Zyklisch", "kind.defensive": "Defensiv",
+  "axis.g": "Wachstum", "axis.i": "Inflation", "proxy": "Proxy", "source": "Quelle",
+  "radar.current": "Bestätigtes Regime", "radar.stable": "Stabiles Regime, kein Übergang im Gange", "radar.pending": "Übergang zu {to}: {n} von {req} Tagen bestätigt", "radar.rawdiff": "Das Rohsignal von heute zeigt {raw}, noch kein Bestätigungstag.",
+  "radar.conf": "Zuverlässigkeit", "radar.since": "seit {d}", "radar.dist": "bis zum Wechsel ({ax})", "radar.bubble": "Blasenrisiko", "radar.bubble.t": "Blasenrisiko Index", "radar.quad": "Position in den vier Regimen",
+  "radar.map": "Regimekarte", "radar.signals": "Marktsignale", "radar.signals.d": "Vom Skript verwendete Renditen (SPY, HYG, TLT für Wachstum; GSG und TIP minus IEF für Inflation).",
+  "radar.amb.gold_stag": "Unklare Zone zwischen Goldilocks und Stagflation: Die Allokation ist eine vorsichtige Mischung beider mit defensivem Bias.",
+  "radar.amb.stag_refl": "Unklare Zone zwischen Stagflation und Reflation: Die Allokation ist eine vorsichtige Mischung beider mit defensivem Bias.",
+  "radar.macro": "Bestätigung durch echte Makrodaten (FRED)", "macro.na": "FRED Daten sind nicht verfügbar: Das Regime beruht nur auf dem Markt.",
+  "macro.sum": "Anpassung der Zuverlässigkeit: {adj} Punkte. Wachstum: {g}. Inflation: {i}.", "agree.1": "bestätigt", "agree.0": "neutral", "agree.-1": "widerspricht",
+  "col.series": "Reihe", "col.value": "Wert", "col.date": "Datum", "col.detail": "Detail", "d.yoy": "1 Jahr", "d.ann3m": "3M annualisiert", "d.avg4": "4 Wochen Schnitt",
+  "fred.CPIAUCSL": "Verbraucherpreise", "fred.INDPRO": "Industrieproduktion", "fred.PAYEMS": "Beschäftigte außerhalb der Landwirtschaft", "fred.GDPNOW": "GDPNow (Atlanta Fed)", "fred.ICSA": "Erstanträge Arbeitslosenhilfe", "fred.BAMLH0A0HYM2": "Spread Hochzinsanleihen", "fred.T10Y2Y": "Steigung 10 Jahre minus 2 Jahre", "fred.DGS10": "Rendite 10 Jahre", "fred.DGS2": "Rendite 2 Jahre",
+  "comp.spy12": "S&P 500 12 Monate", "comp.spy6": "S&P 500 6 Monate", "comp.hyg6": "Hochzins 6 Monate", "comp.tlt6": "Lange Anleihen 6 Monate", "comp.gsg12": "Rohstoffe 12 Monate", "comp.gsg6": "Rohstoffe 6 Monate", "comp.be6": "Inflationserwartung 6 Monate",
+  "pil.valuation": "Bewertung", "pil.euphoria": "Euphorie", "pil.debt": "Verschuldung", "pil.liquidity": "Liquidität", "pil.concentration": "Konzentration",
+  "pil.valuation.d": "Je höher das Shiller CAPE, desto teurer der Markt.", "pil.euphoria.d": "Niedriger VIX und ein breiter Markt über dem 50 Tage Schnitt deuten auf Euphorie.", "pil.debt.d": "Enge Kreditspreads: Der Markt unterschätzt das Kreditrisiko.", "pil.liquidity.d": "Flache oder inverse Kurve: angespanntere Liquidität.", "pil.concentration.d": "Mega Caps dominieren den Rest des Marktes.",
+  "btn.pdf": "Als PDF exportieren", "btn.share": "Teilen", "btn.copytsv": "Kopieren (TSV)", "print.date": "Berechnet am", "print.blocked": "Drucken ist in diesem Rahmen blockiert: Seite in neuem Tab öffnen.",
+  "share.text": "FIRE Makro Radar: Regime {reg}, Blasenrisiko {b} von 100. Prioritäre Sektoren: {top}. Bildungswerkzeug.",
+  "alloc.title": "Ziel Sektorallokation", "alloc.regime": "Verwendetes Regime", "alloc.tilt": "Defensive Stufen", "alloc.blend": "Vorsichtige Mischung aus {a} und {b}.", "alloc.sorted": "Nach Priorität sortiert: Zielgewicht absteigend, dann 3 Monats Momentum.", "alloc.capital": "Zu verteilendes Kapital (EUR)",
+  "col.sector": "Sektor", "col.action": "Aktion", "col.weight": "Zielgewicht", "col.amount": "Betrag", "col.base": "Basis", "col.range": "6M Position", "col.etf": "UCITS ETF (ISIN)", "col.ter": "TER", "col.pea": "PEA", "col.rank": "Rang", "col.kind": "Typ", "col.regime": "Regime", "col.class": "Anlageklasse", "col.env": "Hülle", "col.file": "Datei", "col.age": "Alter", "col.state": "Status", "col.source": "Quelle",
+  "pea.yes": "PEA geeignet", "pea.no": "Nicht PEA geeignet", "etf.unverified": "ISIN bei justETF prüfen", "etf.approx": "Näherung",
+  "alloc.pea.note": "Keiner dieser US Sektor UCITS ETFs ist für den PEA (französischer Aktiensparplan) geeignet. Für einen PEA ist ein breiterer zulässiger ETF besser. Prüfen Sie Zulässigkeit, TER und ISIN immer bei Ihrem Broker oder auf justETF.",
+  "alloc.etf.note": "Die gezeigten ETFs sind Bildungsbeispiele für iShares UCITS ETFs, keine persönliche Empfehlung. Ein Fragezeichen markiert eine zu prüfende ISIN.",
+  "heat.title": "Sektor Heatmap", "heat.d": "Momentum über 1, 3 und 6 Monate, relative Stärke gegenüber dem S&P 500, Lage zu den gleitenden Durchschnitten 50 und 200 Tage.", "heat.all": "Alle", "heat.def": "Defensiv", "heat.cyc": "Zyklisch", "heat.sort": "Sortieren nach",
+  "hm.weight": "Zielgewicht", "hm.mom_1m": "Momentum 1M", "hm.mom_3m": "Momentum 3M", "hm.mom_6m": "Momentum 6M", "hm.rel_strength_3m": "Relative Stärke 3M", "hm.vs_ma50": "Abstand GD50", "hm.vs_ma200": "Abstand GD200",
+  "sect.title": "Sektorseiten", "sect.d": "Öffnen Sie einen Sektor, um Kontext je Regime, ETF, Wertentwicklung und Risiken zu sehen.", "sect.now": "aktuelles Regime", "sect.ctx": "Kontext je Regime", "sect.perf": "Wertentwicklung", "sect.etf": "ETF", "sect.proxy": "US Referenz ETF für den Backtest", "sect.risks": "Risiken",
+  "ctx.strong": "Hohes Basisgewicht ({w} %): Sektor in diesem Regime begünstigt.", "ctx.neutral": "Basisgewicht nahe am Durchschnitt ({w} %): kein starker Bias.", "ctx.weak": "Reduziertes Basisgewicht ({w} %): Sektor in diesem Regime wenig begünstigt.",
+  "sec.tech": "Technologie", "sec.comm": "Kommunikation", "sec.disc": "Zyklischer Konsum", "sec.fin": "Finanzen", "sec.ind": "Industrie", "sec.mat": "Grundstoffe", "sec.energy": "Energie", "sec.health": "Gesundheit", "sec.staples": "Basiskonsum", "sec.util": "Versorger", "sec.re": "Börsennotierte Immobilien",
+  "sec.tech.d": "Software, Halbleiter und Hardware: Wachstumsmotor der Indizes, sehr zinssensibel.", "sec.comm.d": "Medien, Plattformen und Telekom: Mischung aus Werbewachstum und Rendite.", "sec.disc.d": "Handel, Auto, Freizeit: hängt von Konsum und Krediten der Haushalte ab.", "sec.fin.d": "Banken, Versicherer, Vermögensverwalter: profitieren von steiler Kurve und gesundem Zyklus.", "sec.ind.d": "Luftfahrt, Transport, Maschinen: folgt dem Investitionszyklus.", "sec.mat.d": "Chemie, Metalle, Verpackung: an Rohstoffe und globale Nachfrage gebunden.", "sec.energy.d": "Öl und Gas: schützt oft, wenn die Inflation von Rohstoffen kommt.", "sec.health.d": "Pharma, Geräte, Krankenversicherung: stabile Nachfrage, defensiv.", "sec.staples.d": "Lebensmittel, Haushaltswaren, Grundversorgung: regelmäßige Erträge, defensiv.", "sec.util.d": "Strom, Gas, Wasser: stabile Dividenden, zinssensibel.", "sec.re.d": "Börsennotierte Immobilien: hohe Rendite, sehr zinssensibel.",
+  "sec.tech.r": "Hohe Bewertungen, Konzentration auf wenige Giganten, starke Zinssensibilität.", "sec.comm.r": "Konzentration auf wenige Titel, regulatorisches Risiko, Werbezyklus.", "sec.disc.r": "Nachlassender Konsum, teurere Kredite, starke Konzentration auf wenige Titel.", "sec.fin.r": "Kreditausfälle, inverse Kurve, Regulierung und Bankenstress.", "sec.ind.r": "Abschwung des Industriezyklus, Energie und Vorleistungskosten.", "sec.mat.r": "Schwächere chinesische Nachfrage, fallende Preise, starker Dollar.", "sec.energy.r": "Ölvolatilität, Energiewende, nachlassende Nachfrage.", "sec.health.r": "Politisches Risiko bei Arzneimittelpreisen, Patentabläufe.", "sec.staples.r": "Schwächer in Aufwärtsmärkten, Margendruck, Kosteninflation.", "sec.util.r": "Steigende lange Zinsen, hohe Verschuldung, regulatorisches Risiko.", "sec.re.r": "Steigende Zinsen, Refinanzierung, fragile Büro und Handelsflächen.",
+  "bt.title": "Backtest des Radar Portfolios", "bt.d": "Kurve auf Basis 100 gegen Weltaktien (VT) und S&P 500, mit Regimebändern im Hintergrund.", "bt.honest": "Rückblickender Backtest: Die Historie der UCITS ETFs ist kurz, ein US ETF auf denselben Index verlängert die Reihe vor deren Auflegung. Rein indikativ.",
+  "bt.t.net": "Netto nach Kosten", "bt.t.vt": "VT", "bt.t.spy": "S&P 500", "bt.t.bands": "Regimebänder", "bt.win": "Zeitfenster", "bt.win.full": "Gesamte Historie seit {a}", "bt.win.ucits": "Fenster echter UCITS ETFs seit {a}",
+  "bt.radar": "Radar brutto", "bt.radar.net": "Radar netto", "bt.metrics": "Kennzahlen", "bt.metrics.u": "Kennzahlen im Fenster echter UCITS ETFs", "bt.metrics.u.d": "Zeitraum, in dem fast alle empfohlenen UCITS ETFs tatsächlich existieren.", "bt.alpha": "Alpha je Regime", "bt.alpha.d": "Annualisierte Portfolio Rendite minus VT, gemessen an den Tagen in jedem Regime.", "bt.share": "Zeitanteil",
+  "bt.turn": "Umschlag", "bt.turn.a": "Jährlicher Umschlag", "bt.turn.c": "Regimewechsel", "bt.turn.d": "Einseitiger Umschlag in Prozent des Portfolios pro Jahr.", "bt.universe": "Verwendete ETFs", "bt.universe.d": "Startdatum der echten UCITS ETFs. Davor dient der US Referenz ETF als Vergleichsindex.", "bt.ucits.start": "Start UCITS ETF", "bt.proxy": "US Referenz ETF", "bt.noucits": "Kein UCITS Gegenstück", "bt.limits": "Methode und Grenzen",
+  "m.metric": "Kennzahl", "m.total_return": "Gesamtrendite", "m.cagr": "Annualisierte Rendite", "m.vol": "Volatilität", "m.sharpe": "Sharpe Ratio", "m.max_drawdown": "Maximaler Verlust", "m.win_rate_monthly": "Gewinnmonate",
+  "hist.prob": "Übergangswahrscheinlichkeiten", "hist.prob.d": "Wahrscheinlichkeit jedes Regimes innerhalb von 3 Monaten, ausgehend von {r}, auf Basis der langen Historie.", "hist.stay": "(bleiben)", "hist.fallback": "Matrix nicht verfügbar: Ersatzwahrscheinlichkeiten aus einer generischen Monatsmatrix.", "hist.dist": "Abstand des Signals zur Schwelle", "hist.dist.d": "Es fehlen {p} Punkte auf der Achse {ax} für einen Quadrantenwechsel (Wachstum {G}, Inflation {I}).",
+  "hist.matrix": "Übergangsmatrix über 3 Monate", "hist.from": "Von ↓ nach →", "hist.dur": "Durchschnittliche Dauer", "hist.list": "Verlauf der Regimewechsel", "hist.list.d": "Einträge werden nur bei einem bestätigten Wechsel ergänzt. Rekonstruierte Einträge stammen aus dem Replay der Historie.", "hist.change": "Wechsel", "hist.elapsed": "Dauer des Regimes", "hist.spy": "SPY seit", "hist.port": "Portfolio seit", "hist.boot": "rekonstruiert", "hist.perf.d": "Portfolio mit festen Gewichten: Basisgewichte des neuen Regimes am Wechseltag, ohne Rebalancing.",
+  "we.title": "Mein Vermögen gegen das Regimeziel", "we.d": "Vergleichen Sie Ihr tatsächliches Engagement (PEA, CTO, Lebensversicherung, PER, SCPI) mit der Zielallokation des aktuellen Regimes je Anlageklasse.", "we.privacy": "Keine persönlichen Daten laufen über einen fremden Server: Ihr Browser liest Ihr Google Sheets direkt (die Datei muss per Link zur Ansicht freigegeben sein) und die Beträge bleiben im lokalen Speicher Ihres Geräts. Die Datei ID steht nie im Seitencode.",
+  "we.sheetid": "Google Sheets ID oder Link", "we.sheetname": "Tabellenname (optional)", "we.load": "Mein Google Sheets laden", "we.clear": "Meine Daten löschen", "we.noid": "Datei ID oder Link eingeben.", "we.saved": "Letzte lokale Speicherung: {d} ({s}).", "we.src.manual": "manuelle Eingabe", "we.src.sheet": "Google Sheets",
+  "we.map": "Zu verwendende Spalten", "we.none": "Keine", "we.amount": "Betrag", "we.mapfail": "Spalten nicht erkannt: unten auswählen oder manuelle Eingabe nutzen.", "we.loaded": "{n} Zeilen gelesen.", "we.assumed": "{n} Zeilen von Lebensversicherung oder PER ohne Anlageklasse wurden als Aktien gezählt.", "we.err": "Datei nicht lesbar: Linkfreigabe prüfen oder manuelle Eingabe nutzen",
+  "we.manual": "Manuelle Eingabe je Hülle", "we.manual.d": "Beträge in Euro je Hülle und Anlageklasse. Nur auf diesem Gerät gespeichert.", "we.res": "Abweichungen und Vorschläge", "we.empty": "Beträge eingeben (Google Sheets oder manuell), um die Abweichungen zu sehen.", "we.gap": "Abweichungen je Anlageklasse", "we.actual": "Ist", "we.target": "Regimeziel", "we.diff": "Abweichung (Punkte)", "we.diffe": "Abweichung (EUR)",
+  "we.sugg": "Rebalancing Vorschläge je Hülle", "we.ok": "Ihre Allokation liegt nahe am Regimeziel: keine nennenswerte Umschichtung.", "we.move": "Etwa {amt} von {a} (Hülle {ea}) nach {b} (Hülle {eb}) umschichten.", "we.flow": "Etwa {amt} neue Einzahlungen in {c} lenken (Hülle {e}).",
+  "we.h.cto": "Ein Verkauf im CTO löst Steuern auf Kursgewinne aus: neue Einzahlungen bevorzugen.", "we.h.pea": "Im PEA sind nur zulässige ETFs möglich.", "we.h.scpi": "Immobilien laufen über SCPI Fonds oder Lebensversicherungs Einheiten.", "we.h.peasell": "Eine Entnahme aus dem PEA vor 5 Jahren hat steuerliche Folgen.", "we.h.flow": "Um Kosten und Steuern zu begrenzen, zuerst neue Einzahlungen nutzen, dann verkaufen.",
+  "we.byenv": "Aufteilung je Hülle", "we.share": "Anteil", "we.disc": "Indikative Bildungsvorschläge, an Ihre steuerliche Lage und Einschränkungen anzupassen.",
+  "cls.actions": "Aktien", "cls.obligations": "Anleihen", "cls.or_matieres": "Gold und Rohstoffe", "cls.immobilier": "Immobilien", "cls.cash": "Liquidität",
+  "cmp.title": "Drei Allokationen vergleichen", "cmp.d": "Meine Allokation, das Radar Ziel und All Weather, je Anlageklasse.", "cmp.nomine": "Beträge im Tab Vermögen eingeben, um Ihre Allokation zu sehen.", "cmp.mine": "Meine Allokation", "cmp.radar": "Radar", "cmp.gap.r": "Abstand zum Radar", "cmp.gap.a": "Abstand zu All Weather", "cmp.note": "All Weather dient hier als Referenz: 30 % Aktien, 55 % Anleihen, 15 % Gold und Rohstoffe. Der Aktienteil des Radars verteilt sich dann auf 11 Sektoren.",
+  "st.title": "FIRE Stresstest", "st.d": "Monte Carlo Simulation im Browser: Das aktuelle Regime und mögliche Übergänge werden auf Ihren Plan angewendet (Kapital, Sparrate, Zieldatum, Entnahmen).", "st.start": "Startregime:", "st.src": "Übergänge: {a}. Renditen je Regime: {b}.", "st.src.m.emp": "empirische Matrix", "st.src.m.fb": "generische Ersatzmatrix", "st.src.s.bt": "vom Backtest gemessen", "st.src.s.def": "didaktische Standardwerte",
+  "st.cap": "Aktuelles Kapital (EUR)", "st.save": "Monatliche Sparrate (EUR)", "st.years": "Jahre bis zum Ziel", "st.spend": "Jährliche Ausgaben (EUR)", "st.swr": "Angestrebte Entnahmerate (%)", "st.ret": "Dauer des Ruhestands (Jahre)", "st.infl": "Inflation (%)", "st.eq": "Aktienanteil (%)", "st.n": "Anzahl Simulationen", "st.run": "Simulation starten", "st.running": "Berechnung läuft",
+  "st.res": "Ergebnisse", "st.res.d": "Zielkapital {t} (Ausgaben geteilt durch Entnahmerate), {n} Simulationen je Szenario, in konstanten Euro.", "st.scen": "Szenario", "st.preach": "Ziel erreicht", "st.psurv": "Ruhestand getragen", "st.pplan": "Gesamter Plan", "st.med": "Mediankapital zum Ziel (10. und 90. Perzentil)",
+  "st.sc.markov": "Aktuelles Regime, dann Übergänge", "st.sc.stress": "Schock: Stagflation für 24 Monate", "st.sc.persist": "Aktuelles Regime eingefroren", "st.fan": "Angezeigte Kurve", "st.fan.d": "Helles Band: 10. bis 90. Perzentil. Dunkles Band: 25. bis 75. Perzentil. Gepunktete Linie: Zielkapital.", "st.limits": "Vereinfachtes Modell: Zufallsrenditen je Regime, keine Steuern, keine Korrelation zwischen Aktien und anderen Anlagen. Ein Ergebnis ist keine Prognose.",
+  "gm.title": "Errate das Regime", "gm.d": "Zehn Runden: Finden Sie anhand der Signale eines vergangenen Datums das vom Radar erkannte Regime.", "gm.best": "Bester Punktestand", "gm.beststreak": "Beste Serie", "gm.games": "Spiele", "gm.acc": "Trefferquote", "gm.start": "Neues Spiel", "gm.again": "Nochmal spielen", "gm.end": "Spiel beendet", "gm.end.d": "{c} richtige Antworten von {n}.",
+  "gm.round": "Runde {i} von {n}", "gm.score": "Punkte", "gm.streak": "Serie", "gm.q": "Welches Regime hat das Radar erkannt?", "gm.ok": "Richtig.", "gm.ko": "Daneben.", "gm.reveal": "Regime: {r}. Datum: {d}. Wachstum {G}, Inflation {I}.", "gm.next": "Nächste Runde", "gm.finish": "Punktestand ansehen",
+  "gm.share": "Code zum Teilen", "gm.share.d": "Kopieren Sie Ihren Code, um sich mit Freunden zu vergleichen. Es wird keine Rangliste auf einem Server gespeichert.", "gm.friend": "Code eines Freundes", "gm.badcode": "Ungültiger Code.", "gm.you": "Sie", "gm.friendn": "Freund",
+  "jr.title": "Entscheidungsjournal", "jr.d": "Notieren Sie Ihre Umschichtungen mit dem Regime des Moments, um Entscheidungen später nachzulesen.", "jr.local": "Die Notizen bleiben auf diesem Gerät. Um beim Gerätewechsel nichts zu verlieren, JSON Datei exportieren und anderswo importieren.", "jr.note": "Neue Notiz", "jr.ph": "Z. B. Gesundheit aufgestockt, Technologie reduziert", "jr.add": "Zum Journal hinzufügen", "jr.ctx": "Gespeicherter Kontext:", "jr.none": "Noch keine Notizen.",
+  "jr.io": "Export und Import", "jr.io.d": "Die Datei wird heruntergeladen und der Inhalt erscheint auch im Feld unten, zum Kopieren falls der Download blockiert ist.", "jr.exp": "Als JSON exportieren", "jr.file": "Datei wählen", "jr.imp": "Text importieren", "jr.io.ph": "Inhalt eines JSON Exports hier einfügen, um ihn zu importieren", "jr.imported": "{n} Notiz(en) importiert.", "jr.badjson": "Ungültige Datei oder ungültiger Text.",
+  "al.title": "Alarme bei Regimewechsel", "al.d": "Bei jedem bestätigten Regimewechsel werden ein Atom Feed und eine E Mail ausgelöst.", "al.limit": "Grenze: Ohne Authentifizierungsserver lassen sich Alarme nicht auf Premium Mitglieder beschränken. Sie stehen allen offen.", "al.rss": "Atom Feed (RSS Reader)", "al.mail": "E Mail Alarm", "al.signup": "Alarme abonnieren", "al.nocfg": "Das Anmeldeformular ist noch nicht konfiguriert (siehe Bereitstellungsanleitung).", "al.optin": "Double Opt in und Abmeldung übernimmt der E Mail Dienst.",
+  "me.title": "Methode, Datenstatus und FAQ", "me.d": "Alle Details zu Modell, Quellen und Grenzen.", "me.data": "Datenstatus", "data.sources": "Quellen", "data.spec": "Modellparameter: {s}.", "data.base": "Datenadresse:", "data.errs": "Nicht gelesene Dateien", "spec.distant": "model_spec.json aus den Daten geladen", "spec.repli": "fest codierter Ersatz im Widget",
+  "src.prices": "Kurse (Yahoo, Stooq)", "src.fred": "FRED Makro", "src.cape": "Shiller CAPE", "srcst.ok": "OK", "srcst.repli": "Ersatz", "srcst.indisponible": "Nicht verfügbar",
+  "me.regime": "Regimeerkennung", "me.regime.1": "Zwei Achsen werden vom Python Skript berechnet, nicht vom Browser. Fenster: {L} Handelstage (12 Monate) und {S} Tage (6 Monate).",
+  "me.regime.2": "Wachstum G: S&P 500 Rendite 12 Monate (Gewicht {w12}), S&P 500 6 Monate (Gewicht {w6}, Beitrag ausdrücklich auf plus oder minus {cap} begrenzt), Hochzins 6 Monate (Gewicht {wh}), minus ein Abschlag für lange Anleihen (Gewicht {wt}), wenn sie einbrechen. Jede Rendite wird durch eine Skala geteilt und begrenzt. G reicht von minus 100 bis plus 100. Diese Formel ersetzt die alte implizite Kappung spy6Capped.",
+  "me.regime.3": "Inflation I: Rohstoffe 12 Monate (Gewicht {a}), Rohstoffe 6 Monate (Gewicht {b}) und relative Rendite TIP minus IEF über 6 Monate als Proxy für die Inflationserwartung (Gewicht {c}).",
+  "me.regime.4": "Quadranten: G positiv und I negativ Goldilocks, G und I positiv Reflation, G negativ und I positiv Stagflation, G und I negativ Neutral. Unklare Zonen (Band von {band} Punkten) zwischen Stagflation und Reflation sowie zwischen Goldilocks und Stagflation: Die Allokation wird zu einer vorsichtigen, defensiveren Mischung.",
+  "me.regime.5": "Eine einzige Wahrheitsquelle: Alle Parameter stehen in model_spec.json, gelesen vom Skript und von diesem Widget. Die offizielle Berechnung macht das Skript, das Widget zeigt an.",
+  "me.macro": "FRED Makrobestätigung", "me.macro.1": "Das Skript liest neun FRED Reihen (CPIAUCSL, INDPRO, PAYEMS, GDPNOW, ICSA 4 Wochen Schnitt, BAMLH0A0HYM2, T10Y2Y, DGS10, DGS2) und leitet einen Makro Wachstums und Inflationsscore ab. Jede bestätigende Achse erhöht die Zuverlässigkeit, jede widersprechende senkt sie, insgesamt um plus oder minus {max} Punkte.", "me.macro.2": "Widersprechen beide Achsen dem Markt vollständig bei deutlichen Makroscores, wechselt das Rohregime auf die Makrolesung. Makrodaten erscheinen verzögert: Sie bestätigen, sie nehmen nichts vorweg.",
+  "me.inertia": "Trägheit des Regimes", "me.inertia.1": "Ein neues Regime wird erst nach {n} aufeinanderfolgenden Handelstagen bestätigt. Der Zustand (aktuelles Regime, Kandidat, Zähler) liegt in state.json und rückt nur einmal täglich beim Schlusslauf vor. Die Punkte Anzeige zeigt den Zähler.", "me.inertia.2": "Zwischen zwei Schlusskursen zeigt das Widget das aktuelle Rohsignal, ändert aber nie das bestätigte Regime.",
+  "me.bubble": "Blasenrisiko Index", "me.bubble.1": "Index von 0 bis 100, fünf gewichtete Säulen (in Prozent): {w}. Stufen: {tiers}.", "me.bubble.2": "Bewertung: Shiller CAPE. Euphorie: niedriger VIX und Breite der 11 Sektoren über ihrem GD50. Verschuldung: FRED Hochzins Spread. Liquidität: Steigung 10 Jahre minus 2 Jahre mit Richtungsnuance. Konzentration: QQQ zu VTI und SPY zu RSP. Fehlt ein Datum, wird ein markierter Proxy genutzt.",
+  "me.alloc": "Sektorallokation", "me.alloc.1": "Jedes Regime hat Basisgewichte für die 11 Sektoren. Je nach Blasenstufe werden defensive Sektoren erhöht und Sektoren mit hohem Beta um {tilt} % je Stufe reduziert, danach auf 100 normiert. Eine unklare Zone fügt eine vorsichtige Stufe hinzu.", "me.alloc.2": "Labels nach Endgewicht: Aufstocken ab {r} %, Übergewichten {o} %, Halten {h} %, Reduzieren {t} %, darunter Meiden.",
+  "me.bt": "Backtest", "me.bt.1": "Der Backtest wendet die Basisgewichte des am Vortag bestätigten Regimes an (nur Marktsignal, ohne FRED, mit Trägheit), mit Rebalancing bei jedem Regimewechsel und jedem Monatsbeginn. Die empfohlenen UCITS ETFs werden über den gesamten Zeitraum genutzt, in dem sie existieren; der US ETF auf denselben Index verlängert sie vor der Auflegung.", "me.bt.2": "Die Nettoversion zieht {c} Basispunkte je gehandeltem Volumen und die Kostendifferenz auf dem rekonstruierten Teil ab. Keine Steuern, kein EUR Währungseffekt.",
+  "me.src": "Quellen und Aktualität", "me.src.1": "Kurse: Yahoo Finance (Ersatz Stooq). Makro: FRED. CAPE: Robert Shiller (Ersatz multpl.com). Die Berechnungen laufen in geplanten GitHub Actions Workflows und werden als statische JSON Dateien veröffentlicht.", "me.src.2": "Die Daten sind so alt wie die letzte Berechnung, höchstens 30 Minuten während der Handelszeit. Das ist keine Echtzeit.",
+  "me.legal": "Hinweis", "me.legal.1": "Bildungswerkzeug, keine personalisierte Anlageberatung. Es berücksichtigt weder Ihre Situation noch Ihre Ziele noch Ihre Steuern.", "me.legal.2": "Frühere Wertentwicklung ist kein Indikator für die Zukunft. Eine Anlage in Aktien kann zu Kapitalverlust führen.",
+  "faq.title": "Häufige Fragen",
+  "faq.1.q": "Warum ändert sich das Regime nicht sofort?", "faq.1.a": "Um Fehlsignale zu vermeiden, muss ein neues Regime an drei Handelstagen in Folge bestätigt werden.",
+  "faq.2.q": "Was bedeutet die unklare Zone?", "faq.2.a": "Das Signal liegt nahe an der Grenze zwischen zwei Regimen. Die Allokation wird zu einer vorsichtigen Mischung beider Regime mit defensivem Bias.",
+  "faq.3.q": "Warum verändert ein hoher Blasenindex die Allokation?", "faq.3.a": "Ein hohes Blasenrisiko stärkt defensive Sektoren und reduziert Sektoren mit hohem Beta, ohne einen Crash vorherzusagen.",
+  "faq.4.q": "Sind die ETFs PEA geeignet?", "faq.4.a": "Die gelisteten US Sektor UCITS ETFs sind nicht PEA geeignet. Ein PEA passt zu einem breiteren zulässigen ETF. Prüfen Sie die Zulässigkeit immer bei Ihrem Broker.",
+  "faq.5.q": "Sind die Zahlen in Echtzeit?", "faq.5.a": "Nein. Sie sind so alt wie die oben angezeigte letzte Berechnung, höchstens 30 Minuten während der Handelszeit.",
+  "faq.6.q": "Werden meine Vermögensdaten irgendwohin gesendet?", "faq.6.a": "Nein. Google Sheets wird direkt von Ihrem Browser gelesen und die Beträge bleiben im lokalen Speicher Ihres Geräts.",
+  "faq.7.q": "Was tun, wenn eine Datei veraltet ist?", "faq.7.a": "Das Widget zeigt ein gelbes oder rotes Signal und einen Hinweis. Sie können den Workflow in GitHub Actions von Hand starten.",
+  "faq.8.q": "Garantiert der Backtest die Zukunft?", "faq.8.a": "Nein. Er ist rückblickend, durch die ETF Historie begrenzt und deckt weder Steuern noch Währung ab."
+};
+
+/* ============================================================================
+   NOYAU : configuration, stockage, utilitaires, chargement des JSON, état des données
+   ========================================================================== */
+const CONFIG = Object.assign({
+  // >>> À REMPLACER : URL publique GitHub Pages (branche data) qui sert les JSON, avec le "/" final.
+  DATA_BASE: 'https://izilybourse.github.io/radar-macro-fire/',
+  FILES: { snapshot: 'snapshot.json', state: 'state.json', history: 'history.json', cape: 'cape.json', backtest: 'backtest.json', transitions: 'transitions.json', spec: 'model_spec.json', health: 'health.json' },
+  HOME_URL: 'https://izilyfire.fr',
+  PLAY_URL: 'https://izilyfire.fr/izilyplay',
+  COACH_URL: 'https://izilyfire.fr/services',
+  PAGE_URL: 'https://izilyfire.fr/radar-macro-fire',
+  // >>> À REMPLACER (optionnel) : formulaire d'inscription Brevo (https://sibforms.com/serve/...) ou lien d'inscription
+  BREVO_FORM_URL: '',
+  BREVO_SIGNUP_LINK: '',
+  FETCH_TIMEOUT_MS: 12000,
+  AUTO_REFRESH_MS: 600000
+}, (typeof window !== 'undefined' && window.RMF_CONFIG) || {});
+
+const TABS = ['radar', 'alloc', 'heat', 'sectors', 'backtest', 'history', 'wealth', 'compare', 'stress', 'game', 'journal', 'method'];
+const RC = { goldilocks: '#22c55e', reflation: '#f59e0b', stagflation: '#ef4444', neutral: '#60a5fa' };
+const AC = { reinforce: '#22c55e', overweight: '#84cc16', hold: '#A0A0A0', trim: '#f5b301', avoid: '#ef4444' };
+const CLASS_COL = { actions: '#FF5500', obligations: '#60a5fa', or_matieres: '#f5b301', immobilier: '#a78bfa', cash: '#22c55e' };
+const LOC = { fr: 'fr-FR', en: 'en-GB', de: 'de-DE' };
+
+const S = { lang: 'fr', theme: 'dark', tab: 'radar', data: {}, err: {}, spec: null, specSrc: 'repli', loadedAt: 0, loading: false, heat: { f: 'all', sort: 'weight' }, bt: { net: true, vt: true, spy: true, bands: true, win: 'full' }, patri: null, sheet: null, game: null, stressRes: null, rendered: {} };
+
+/* ---------- Stockage local avec repli en mémoire (localStorage peut être bloqué) ---------- */
+const store = (function () {
+  let ok = true; const mem = {};
+  try { const k = '__rmf_t'; window.localStorage.setItem(k, '1'); window.localStorage.removeItem(k); } catch (e) { ok = false; }
+  return {
+    ok: ok,
+    get: function (k, d) { try { const v = ok ? window.localStorage.getItem('rmf_' + k) : mem[k]; return v == null ? d : JSON.parse(v); } catch (e) { return mem[k] !== undefined ? mem[k] : d; } },
+    set: function (k, v) { try { if (ok) window.localStorage.setItem('rmf_' + k, JSON.stringify(v)); else mem[k] = JSON.stringify(v); } catch (e) { ok = false; mem[k] = JSON.stringify(v); } },
+    del: function (k) { try { if (ok) window.localStorage.removeItem('rmf_' + k); } catch (e) { } delete mem[k]; }
+  };
+})();
+
+/* ---------- Utilitaires ---------- */
+const root = document.getElementById('rmf');
+const $ = function (s, el) { return (el || root).querySelector(s); };
+const $$ = function (s, el) { return Array.prototype.slice.call((el || root).querySelectorAll(s)); };
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function t(k, v) {
+  let s = (I18N[S.lang] && I18N[S.lang][k]); if (s == null) s = I18N.fr[k]; if (s == null) return k;
+  if (v) for (const x in v) s = s.split('{' + x + '}').join(v[x]);
+  return s;
+}
+function has(k) { return !!(I18N[S.lang] && I18N[S.lang][k]) || !!I18N.fr[k]; }
+function minus(s) { return s.replace(/^[-‐-‒]/, '−'); }
+function nf(n, d, sign) {
+  if (d == null) d = 1;
+  if (n == null || !isFinite(n)) return t('nd');
+  let s = minus(new Intl.NumberFormat(LOC[S.lang], { minimumFractionDigits: d, maximumFractionDigits: d }).format(n));
+  return (sign && n > 0 ? '+' : '') + s;
+}
+function pc(n, d, sign) { return n == null || !isFinite(n) ? t('nd') : nf(n, d == null ? 1 : d, sign) + ' %'; }
+function eur(n) { return n == null || !isFinite(n) ? t('nd') : minus(new Intl.NumberFormat(LOC[S.lang], { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)); }
+function dfmt(iso) { try { return new Intl.DateTimeFormat(LOC[S.lang], { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso.length === 10 ? iso + 'T12:00:00Z' : iso)); } catch (e) { return iso || t('nd'); } }
+function dtfmt(iso) { try { return new Intl.DateTimeFormat(LOC[S.lang], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(iso)); } catch (e) { return iso || t('nd'); } }
+function ageH(iso) { return iso ? (Date.now() - Date.parse(iso)) / 36e5 : Infinity; }
+function ago(iso) {
+  const h = ageH(iso); if (!isFinite(h)) return t('nd');
+  if (h < 1) return t('ago.m', { n: Math.max(1, Math.round(h * 60)) });
+  if (h < 48) return t('ago.h', { n: Math.round(h) });
+  return t('ago.d', { n: Math.round(h / 24) });
+}
+function spec() { return S.spec; }
+function sn() { return S.data.snapshot; }
+function regName(k) { return t('reg.' + k); }
+function regBadge(k) { return '<span class="badge" style="color:' + RC[k] + ';border-color:' + RC[k] + '">' + esc(regName(k)) + '</span>'; }
+function actBadge(a) { return '<span class="badge" style="color:' + AC[a] + ';border-color:' + AC[a] + '">' + esc(t('act.' + a)) + '</span>'; }
+function numStr(n, d) { if (n == null || !isFinite(n)) return ''; return (S.lang === 'en' ? n.toFixed(d) : n.toFixed(d).replace('.', ',')); }
+function parseNum(s) { if (typeof s === 'number') return s; if (s == null) return NaN; const x = parseFloat(String(s).replace(/\s| | /g, '').replace('€', '').replace(',', '.')); return x; }
+function missing(name) { return '<div class="note bad">' + esc(t('missing.file', { f: CONFIG.FILES[name] })) + (S.err[name] ? ' (' + esc(S.err[name]) + ')' : '') + '</div>'; }
+function rtable(cols, rows) {
+  // tableau qui se transforme en cartes empilées sous 640 px (data-label sur chaque cellule)
+  return '<table class="rt"><thead><tr>' + cols.map(function (c) { return '<th class="' + (c.n ? 'n' : '') + '">' + esc(c.h) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    rows.map(function (r) { return '<tr>' + r.map(function (cell, i) { return '<td class="' + (cols[i].n ? 'n' : '') + '" data-label="' + esc(cols[i].h) + '">' + cell + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table>';
+}
+function axBar(v, max) {
+  const w = Math.min(50, Math.abs(v) / max * 50), col = v >= 0 ? 'var(--ok)' : 'var(--ko)';
+  return '<div class="ax"><i style="' + (v >= 0 ? 'left:50%' : 'right:50%') + ';width:' + w + '%;background:' + col + '"></i></div>';
+}
+function heatCell(v, scale) {
+  if (v == null) return '<span class="hm">' + t('nd') + '</span>';
+  const a = Math.min(.65, Math.abs(v) / scale * .65), c = v >= 0 ? '34,197,94' : '239,68,68';
+  return '<span class="hm" style="background:rgba(' + c + ',' + a.toFixed(2) + ')">' + pc(v, 1, true) + '</span>';
+}
+
+/* ---------- Toast, modale, copie, enregistrement de fichier (avec replis iframe sandboxée) ---------- */
+let toastT;
+function toast(msg) { const el = $('#rmf-toast'); el.textContent = msg; el.style.display = 'block'; clearTimeout(toastT); toastT = setTimeout(function () { el.style.display = 'none'; }, 2600); }
+function modal(title, text) { $('#rmf-modal-t').textContent = title; const ta = $('#rmf-modal-ta'); ta.value = text; $('#rmf-modal').classList.add('on'); setTimeout(function () { ta.focus(); ta.select(); }, 30); }
+function copyText(text, title) {
+  const fb = function () {
+    try { const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0'; root.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); if (ok) { toast(t('copied')); return; } } catch (e) { }
+    modal(title || t('copy.manual'), text);
+  };
+  try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(function () { toast(t('copied')); }, fb); return; } } catch (e) { }
+  fb();
+}
+function saveFile(name, mime, text) {
+  try {
+    const b = new Blob([text], { type: mime + ';charset=utf-8' }), u = URL.createObjectURL(b), a = document.createElement('a');
+    a.href = u; a.download = name; root.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 3000);
+    toast(t('saved', { f: name }));
+  } catch (e) { modal(name, text); }
+}
+function openUrl(url) {
+  // navigation fiable : top si possible, sinon nouvel onglet, sinon copie du lien
+  try { window.top.location.assign(url); return; } catch (e) { }
+  try { const w = window.open(url, '_blank', 'noopener'); if (w) return; } catch (e) { }
+  copyText(url, url);
+}
+
+/* ---------- Chargement des JSON (lecture seule, anti cache par l'heure) ---------- */
+async function getJSON(name) {
+  const url = CONFIG.DATA_BASE + CONFIG.FILES[name] + '?_=' + Date.now();
+  const ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  const tm = setTimeout(function () { if (ctl) ctl.abort(); }, CONFIG.FETCH_TIMEOUT_MS);
+  try {
+    const r = await fetch(url, { cache: 'no-store', signal: ctl ? ctl.signal : undefined });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return { ok: true, data: await r.json() };
+  } catch (e) { return { ok: false, error: String(e && e.message || e) }; } finally { clearTimeout(tm); }
+}
+async function loadAll() {
+  if (S.loading) return; S.loading = true; renderStrip();
+  const names = Object.keys(CONFIG.FILES);
+  const res = await Promise.all(names.map(getJSON));
+  names.forEach(function (n, i) {
+    if (res[i].ok && res[i].data) { S.data[n] = res[i].data; delete S.err[n]; } else { S.err[n] = res[i].error; if (!S.data[n]) S.data[n] = null; }
+  });
+  const sp = S.data.spec;
+  if (sp && Array.isArray(sp.sectors) && Array.isArray(sp.regimes)) { S.spec = sp; S.specSrc = 'distant'; } else { S.spec = SPEC_FALLBACK; S.specSrc = 'repli'; }
+  S.loading = false; S.loadedAt = Date.now(); S.rendered = {};
+  renderStrip(); renderBanners(); renderTab(S.tab);
+}
+
+/* ---------- État des données : vert / jaune / rouge ---------- */
+function usState(now) {
+  // état de la séance US en heure de New York : 'session', 'week' (hors séance en semaine), 'weekend'
+  try {
+    const p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(now || new Date());
+    const g = function (ty) { return p.filter(function (x) { return x.type === ty; })[0].value; };
+    const wd = g('weekday'), m = (parseInt(g('hour'), 10) % 24) * 60 + parseInt(g('minute'), 10);
+    if (wd === 'Sat' || wd === 'Sun') return 'weekend';
+    if (wd === 'Mon' && m < 9 * 60 + 30) return 'weekend';
+    return (m >= 9 * 60 + 30 && m <= 16 * 60 + 30) ? 'session' : 'week';
+  } catch (e) { return 'week'; }
+}
+function lvl(age, thr) { const y = (spec().freshness || {}).yellow_factor || 2; return age <= thr ? 'ok' : (age <= thr * y ? 'warn' : 'bad'); }
+function fileStatus() {
+  const F = spec().freshness, out = [], us = usState();
+  const sThr = us === 'session' ? F.snapshot_session_hours : (us === 'weekend' ? F.snapshot_weekend_hours : F.snapshot_offhours_hours);
+  const defs = [['snapshot', sThr, 'h'], ['cape', F.cape_days * 24, 'd'], ['backtest', F.backtest_days * 24, 'd'], ['transitions', F.transitions_days * 24, 'd']];
+  defs.forEach(function (d) {
+    const j = S.data[d[0]], g = j && j.generated_at;
+    let lv = 'bad';
+    if (j && g) lv = lvl(ageH(g), d[1]); else if (j) lv = 'warn';
+    if (!j && d[0] !== 'snapshot') lv = 'warn';
+    out.push({ name: d[0], file: CONFIG.FILES[d[0]], generated: g, lv: lv, thr: d[1], unit: d[2], missing: !j });
+  });
+  return out;
+}
+function overall() {
+  const f = fileStatus(), order = { ok: 0, warn: 1, bad: 2 }; let w = 'ok';
+  f.forEach(function (x) { if (order[x.lv] > order[w]) w = x.lv; });
+  const src = (sn() && sn().sources) || {};
+  Object.keys(src).forEach(function (k) { if (src[k].status === 'indisponible' && w === 'ok') w = 'warn'; });
+  if (sn() && sn().demo) w = 'warn';
+  return w;
+}
+function renderStrip() {
+  const el = $('#rmf-strip'), o = overall(), s = sn();
+  el.innerHTML = '<span><span class="dot ' + o + '"></span>' + esc(t('strip.' + o)) + '</span>' +
+    '<span>' + esc(t('strip.calc')) + ' : ' + esc(s ? dtfmt(s.generated_at) + ' (' + ago(s.generated_at) + ')' : t('nd')) + '</span>' +
+    (s ? '<span>' + esc(t('strip.asof')) + ' : ' + esc(dfmt(s.asof)) + '</span>' : '') +
+    '<button type="button" class="btn sm" data-act="refresh">' + (S.loading ? esc(t('loading')) : esc(t('refresh'))) + '</button>';
+}
+function renderBanners() {
+  const b = []; const s = sn();
+  if (!store.ok) b.push('<div class="note warn">' + esc(t('storage.blocked')) + '</div>');
+  if (s && s.demo) b.push('<div class="note warn">' + esc(t('banner.demo')) + '</div>');
+  if (!s) b.push('<div class="note bad">' + esc(t('banner.nosnap', { u: CONFIG.DATA_BASE })) + '</div>');
+  fileStatus().forEach(function (f) { if (f.lv !== 'ok' && !f.missing) b.push('<div class="note ' + (f.lv === 'bad' ? 'bad' : 'warn') + '">' + esc(t('stale.' + f.name, { a: ago(f.generated) })) + '</div>'); });
+  if (s && s.regime && s.regime.macro_override) b.push('<div class="note warn">' + esc(t('banner.override')) + '</div>');
+  b.push('<div class="note">' + esc(t('banner.age')) + '</div>');
+  $('#rmf-banners').innerHTML = b.join('');
+}
+
+/* ---------- Graphique Canvas natif (lignes, bandes, éventail, infobulle) ---------- */
+function cssv(n) { return getComputedStyle(root).getPropertyValue(n).trim() || '#888'; }
+function drawChart(cv, cfg) {
+  const dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.clientWidth || 320, H = cfg.height || 300;
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.height = H + 'px';
+  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  const m = { l: 44, r: 10, t: 10, b: 24 }, x = cfg.x, n = x.length, pw = W - m.l - m.r, ph = H - m.t - m.b;
+  if (n < 2) return null;
+  let lo = Infinity, hi = -Infinity;
+  const eat = function (arr) { arr.forEach(function (v) { if (v != null && isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }); };
+  cfg.series.forEach(function (s) { eat(s.data); }); (cfg.areas || []).forEach(function (a) { eat(a.lo); eat(a.hi); }); if (cfg.hline != null) { lo = Math.min(lo, cfg.hline); hi = Math.max(hi, cfg.hline); }
+  if (!isFinite(lo)) return null; const pad = (hi - lo) * .06 || 1; lo -= pad; hi += pad; if (cfg.floor0) lo = Math.max(0, lo);
+  const X = function (i) { return m.l + pw * i / (n - 1); }, Y = function (v) { return m.t + ph * (1 - (v - lo) / (hi - lo)); };
+  const tx2 = cssv('--tx2'), bd = cssv('--bd');
+  (cfg.bands || []).forEach(function (b) { g.fillStyle = b.color; const a = X(b.i0), z = X(b.i1); g.fillRect(a, m.t, Math.max(1, z - a), ph); });
+  g.strokeStyle = bd; g.fillStyle = tx2; g.font = '11px Inter,sans-serif'; g.lineWidth = 1; g.textAlign = 'right';
+  for (let k = 0; k <= 4; k++) { const v = lo + (hi - lo) * k / 4, y = Y(v); g.beginPath(); g.moveTo(m.l, y); g.lineTo(W - m.r, y); g.stroke(); g.fillText((cfg.yFmt || function (q) { return Math.round(q); })(v), m.l - 5, y + 4); }
+  g.textAlign = 'center'; const ticks = Math.max(2, Math.min(6, Math.floor(pw / 80)));
+  for (let k = 0; k < ticks; k++) { const i = Math.round((n - 1) * k / (ticks - 1)); g.fillText(cfg.xFmt ? cfg.xFmt(x[i]) : x[i], Math.min(W - 18, Math.max(m.l + 12, X(i))), H - 6); }
+  (cfg.areas || []).forEach(function (a) { g.fillStyle = a.color; g.beginPath(); for (let i = 0; i < n; i++) { const yy = Y(a.hi[i]); i ? g.lineTo(X(i), yy) : g.moveTo(X(i), yy); } for (let i = n - 1; i >= 0; i--) g.lineTo(X(i), Y(a.lo[i])); g.closePath(); g.fill(); });
+  if (cfg.hline != null) { g.strokeStyle = cssv('--or'); g.setLineDash([6, 4]); g.beginPath(); g.moveTo(m.l, Y(cfg.hline)); g.lineTo(W - m.r, Y(cfg.hline)); g.stroke(); g.setLineDash([]); }
+  cfg.series.forEach(function (s) {
+    g.strokeStyle = s.color; g.lineWidth = s.w || 2; g.setLineDash(s.dash || []); g.beginPath(); let st = false;
+    s.data.forEach(function (v, i) { if (v == null) { st = false; return; } st ? g.lineTo(X(i), Y(v)) : g.moveTo(X(i), Y(v)); st = true; }); g.stroke(); g.setLineDash([]);
+  });
+  return { X: X, Y: Y, m: m, W: W, H: H, n: n, pw: pw };
+}
+function attachTip(cv, tipEl, geo, cfg, snapshotFn) {
+  const move = function (e) {
+    const r = cv.getBoundingClientRect(), px = (e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX)) - r.left;
+    let i = Math.round((px - geo.m.l) / geo.pw * (geo.n - 1)); i = Math.max(0, Math.min(geo.n - 1, i));
+    drawChart(cv, cfg); const g = cv.getContext('2d'); g.strokeStyle = cssv('--tx2'); g.lineWidth = 1; g.beginPath(); g.moveTo(geo.X(i), geo.m.t); g.lineTo(geo.X(i), geo.H - geo.m.b); g.stroke();
+    tipEl.innerHTML = snapshotFn(i); tipEl.style.display = 'block'; tipEl.style.left = Math.min(geo.W - 150, Math.max(4, geo.X(i) + 8)) + 'px'; tipEl.style.top = '8px';
+  };
+  cv.onpointermove = move; cv.onpointerdown = move; cv.onpointerleave = function () { tipEl.style.display = 'none'; drawChart(cv, cfg); };
+}
+
+/* ---------- Rendu : onglets, actions déléguées ---------- */
+const RENDER = {};   // rempli par les modules d'onglets
+const ACT = {};
+function renderTab(k) {
+  const p = $('#panel-' + k); if (!p || !RENDER[k]) return;
+  try { p.innerHTML = RENDER[k](); if (RENDER[k + '_after']) RENDER[k + '_after'](p); S.rendered[k] = true; }
+  catch (e) { p.innerHTML = '<div class="note bad">' + esc(t('render.error')) + ' (' + esc(e.message) + ')</div>'; if (window.console) console.error(e); }
+}
+function buildChrome() {
+  $('#rmf-tabs').innerHTML = TABS.map(function (k) { return '<button type="button" role="tab" class="tab" id="tab-' + k + '" data-act="tab" data-k="' + k + '" aria-selected="' + (k === S.tab) + '">' + esc(t('tab.' + k)) + '</button>'; }).join('');
+  $('#rmf-panels').innerHTML = TABS.map(function (k) { return '<section class="panel' + (k === S.tab ? ' on' : '') + '" id="panel-' + k + '" role="tabpanel"></section>'; }).join('');
+  $$('[data-i]').forEach(function (el) { el.textContent = t(el.getAttribute('data-i')); });
+  $('#rmf-theme').textContent = S.theme === 'dark' ? t('theme.light') : t('theme.dark');
+  root.setAttribute('data-theme', S.theme); root.setAttribute('lang', S.lang); $('#rmf-lang').value = S.lang;
+}
+function setTab(k) {
+  S.tab = k; store.set('tab', k);
+  $$('.tab').forEach(function (b) { b.setAttribute('aria-selected', String(b.dataset.k === k)); });
+  $$('.panel').forEach(function (p) { p.classList.toggle('on', p.id === 'panel-' + k); });
+  renderTab(k);
+}
+function rerenderAll() { buildChrome(); renderStrip(); renderBanners(); S.rendered = {}; renderTab(S.tab); }
+
+root.addEventListener('click', function (e) {
+  const a = e.target.closest('[data-act]');
+  if (a && ACT[a.dataset.act]) { e.preventDefault(); ACT[a.dataset.act](a, e); return; }
+  const go = e.target.closest('[data-go]');
+  if (go) { e.preventDefault(); openUrl({ home: CONFIG.HOME_URL, play: CONFIG.PLAY_URL, coach: CONFIG.COACH_URL }[go.dataset.go]); }
+});
+root.addEventListener('input', function (e) { const a = e.target.closest('[data-in]'); if (a && ACT[a.dataset.in]) ACT[a.dataset.in](a, e); });
+root.addEventListener('change', function (e) { const a = e.target.closest('[data-ch]'); if (a && ACT[a.dataset.ch]) ACT[a.dataset.ch](a, e); });
+$('#rmf-lang').addEventListener('change', function () { S.lang = this.value; store.set('lang', S.lang); rerenderAll(); });
+ACT.tab = function (a) { setTab(a.dataset.k); };
+ACT.theme = function () { S.theme = S.theme === 'dark' ? 'light' : 'dark'; store.set('theme', S.theme); rerenderAll(); };
+ACT.refresh = function () { loadAll(); };
+ACT['modal-close'] = function () { $('#rmf-modal').classList.remove('on'); };
+window.addEventListener('resize', function () { if (RENDER[S.tab + '_resize']) RENDER[S.tab + '_resize'](); });
+
+/* ============================================================================
+   ONGLET 1 : RADAR (régime, inertie, bulle, macro, partage, PDF)
+   ========================================================================== */
+function openNew(url) { try { const w = window.open(url, '_blank', 'noopener'); if (w) return; } catch (e) { } copyText(url, url); }
+function quadSvg(G, I, band) {
+  const c = 150, k = 1.4, px = c + Math.max(-100, Math.min(100, G)) * k, py = c - Math.max(-100, Math.min(100, I)) * k, b = band * k;
+  const q = function (x, y, col, lab) { return '<rect x="' + x + '" y="' + y + '" width="150" height="150" fill="' + col + '" opacity=".13"/><text x="' + (x + 75) + '" y="' + (y + 78) + '" text-anchor="middle" font-size="12" font-weight="700" fill="' + col + '">' + esc(lab) + '</text>'; };
+  return '<svg viewBox="0 0 300 300" width="100%" style="max-width:340px;display:block;margin:0 auto" role="img" aria-label="' + esc(t('radar.quad')) + '">' +
+    q(150, 0, RC.reflation, regName('reflation')) + q(0, 0, RC.stagflation, regName('stagflation')) + q(150, 150, RC.goldilocks, regName('goldilocks')) + q(0, 150, RC.neutral, regName('neutral')) +
+    '<rect x="' + (c - b) + '" y="' + (c - b) + '" width="' + 2 * b + '" height="' + 2 * b + '" fill="none" stroke="var(--tx2)" stroke-dasharray="4 3" opacity=".7"/>' +
+    '<line x1="0" y1="150" x2="300" y2="150" stroke="var(--tx2)"/><line x1="150" y1="0" x2="150" y2="300" stroke="var(--tx2)"/>' +
+    '<text x="296" y="144" text-anchor="end" font-size="10" fill="var(--tx2)">' + esc(t('axis.g')) + '</text><text x="154" y="12" font-size="10" fill="var(--tx2)">' + esc(t('axis.i')) + '</text>' +
+    '<circle cx="' + px + '" cy="' + py + '" r="9" fill="var(--or)" stroke="#fff" stroke-width="2"/></svg>';
+}
+function bubbleHtml(b) {
+  const tiers = b.tier_thresholds || spec().bubble.tiers;
+  const col = ['var(--ok)', 'var(--wa)', '#f97316', 'var(--ko)'][b.tier];
+  let h = '<div class="hero"><div class="rn" style="color:' + col + ';font-size:clamp(34px,8vw,52px)">' + nf(b.score, 0) + '<span class="mut" style="font-size:16px"> / 100</span></div><div><span class="badge" style="color:' + col + ';border-color:' + col + '">' + esc(t('tier.' + b.tier)) + '</span></div></div>';
+  h += '<div class="meter" style="margin:12px 0 4px;position:relative"><i style="width:' + Math.min(100, b.score) + '%;background:' + col + '"></i>' + tiers.map(function (x) { return '<span class="tk" style="left:' + x + '%"></span>'; }).join('') + '</div><div class="mut" style="display:flex;justify-content:space-between"><span>0</span><span>' + tiers.join('  ') + '</span><span>100</span></div>';
+  h += '<div style="margin-top:12px">' + b.pillars.map(function (p) {
+    return '<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:8px"><b>' + esc(t('pil.' + p.key)) + ' <span class="mut">(' + Math.round(p.weight * 100) + ' %)</span></b><span>' + nf(p.score, 0) + ' / 100' + (p.proxy ? ' <span class="badge y">' + esc(t('proxy')) + '</span>' : '') + '</span></div>' +
+      '<div class="meter" style="margin:5px 0"><i style="width:' + p.score + '%"></i></div><div class="mut">' + esc(t('pil.' + p.key + '.d')) + '</div>' +
+      '<div class="mut">' + esc(t('source')) + ' : ' + esc(p.source) + (p.value != null ? ' · ' + nf(p.value, 2) + ' ' + esc(p.unit) : '') + (p.extra && p.extra.breadth_pct != null ? ' · breadth ' + nf(p.extra.breadth_pct, 0) + ' %' : '') + '</div></div>';
+  }).join('') + '</div>';
+  return h;
+}
+RENDER.radar = function () {
+  const s = sn(); if (!s) return missing('snapshot');
+  const R = s.regime, N = s.inertia, cur = N.current, col = RC[cur];
+  const dots = '●'.repeat(N.counter) + '○'.repeat(Math.max(0, N.required - N.counter));
+  let trans = N.pending ? t('radar.pending', { to: regName(N.candidate), n: N.counter, req: N.required }) : (N.raw_today !== cur ? t('radar.rawdiff', { raw: regName(N.raw_today) }) : t('radar.stable'));
+  const comp = R.components || {};
+  const compRows = ['spy12', 'spy6', 'hyg6', 'tlt6', 'gsg12', 'gsg6', 'be6'].map(function (k) { return '<div class="row"><span>' + esc(t('comp.' + k)) + '</span><span>' + pc(comp[k], 1, true) + '</span></div>'; }).join('');
+  let h = '<div class="card hero" style="border-color:' + col + '"><div class="mut">' + esc(t('radar.current')) + '</div><div class="rn" style="color:' + col + '">' + esc(regName(cur)) + '</div>' +
+    '<div class="dots" style="color:' + col + '" aria-label="' + esc(trans) + '">' + dots + '</div><div class="mut">' + esc(trans) + '</div>' +
+    '<p style="max-width:720px;margin:10px auto">' + esc(t('reg.' + cur + '.d')) + '</p>' +
+    '<div class="grid s" style="max-width:720px;margin:0 auto"><div class="kpi"><b>' + nf(R.confidence, 0) + ' %</b><span>' + esc(t('radar.conf')) + '</span></div><div class="kpi"><b>' + N.days_in_regime + ' ' + esc(t('days')) + '</b><span>' + esc(t('radar.since', { d: dfmt(N.since) })) + '</span></div><div class="kpi"><b>' + nf(R.distance_to_switch.points, 0) + ' ' + esc(t('pts')) + '</b><span>' + esc(t('radar.dist', { ax: R.distance_to_switch.axis === 'G' ? t('axis.g') : t('axis.i') })) + '</span></div><div class="kpi"><b>' + nf(s.bubble.score, 0) + ' / 100</b><span>' + esc(t('radar.bubble')) + '</span></div></div>';
+  if (R.ambiguous) h += '<div class="note warn" style="margin-top:10px;text-align:left">' + esc(t('radar.amb.' + R.zone)) + '</div>';
+  h += '<div class="bar" style="margin:12px 0 0"><button type="button" class="btn pri" data-act="print">' + esc(t('btn.pdf')) + '</button><button type="button" class="btn" data-act="share">' + esc(t('btn.share')) + '</button><button type="button" class="btn" data-act="share-x">X</button><button type="button" class="btn" data-act="share-li">LinkedIn</button><button type="button" class="btn" data-act="share-wa">WhatsApp</button></div></div>';
+  h += '<div class="grid"><div class="card"><h2>' + esc(t('radar.map')) + '</h2>' + quadSvg(R.G, R.I, spec().thresholds.ambiguity_band) +
+    '<div style="margin-top:10px"><div class="row"><span>' + esc(t('axis.g')) + '</span><b>' + nf(R.G, 1, true) + '</b></div>' + axBar(R.G, 100) + '<div class="row" style="margin-top:6px"><span>' + esc(t('axis.i')) + '</span><b>' + nf(R.I, 1, true) + '</b></div>' + axBar(R.I, 100) + '</div></div>' +
+    '<div class="card"><h2>' + esc(t('radar.signals')) + '</h2>' + compRows + '<p class="mut" style="margin:8px 0 0">' + esc(t('radar.signals.d')) + '</p></div></div>';
+  // confirmation macro FRED
+  const M = s.macro || {};
+  h += '<div class="card"><h2>' + esc(t('radar.macro')) + '</h2>';
+  if (!M.available) h += '<div class="note warn">' + esc(t('macro.na')) + '</div>';
+  else {
+    const mc = M.check || {};
+    h += '<p class="mut">' + esc(t('macro.sum', { adj: nf(mc.adjust, 0, true), g: mc.agreement ? t('agree.' + mc.agreement.growth) : '', i: mc.agreement ? t('agree.' + mc.agreement.inflation) : '' })) + '</p>';
+    const order = spec().fred.series;
+    h += rtable([{ h: t('col.series') }, { h: t('col.value'), n: 1 }, { h: t('col.date') }, { h: t('col.detail') }], order.filter(function (k) { return M.series && M.series[k]; }).map(function (k) {
+      const x = M.series[k]; let d = '';
+      if (x.yoy != null) d += t('d.yoy') + ' ' + pc(x.yoy, 1, true) + ' '; if (x.ann3m != null) d += t('d.ann3m') + ' ' + pc(x.ann3m, 1, true) + ' '; if (x.avg4 != null) d += t('d.avg4') + ' ' + nf(x.avg4, 0);
+      return ['<b>' + esc(k) + '</b> <span class="mut">' + esc(t('fred.' + k)) + '</span>', nf(x.value, 2), esc(dfmt(x.date)), esc(d.trim() || t('nd'))];
+    }));
+  }
+  h += '</div><div class="card"><h2>' + esc(t('radar.bubble.t')) + '</h2>' + bubbleHtml(s.bubble) + '</div>';
+  return h;
+};
+function shareText() {
+  const s = sn(); if (!s) return CONFIG.PAGE_URL;
+  const top = s.allocation.sectors.slice(0, 3).map(function (x) { return t('sec.' + x.key); }).join(', ');
+  return t('share.text', { reg: regName(s.inertia.current), b: nf(s.bubble.score, 0), top: top });
+}
+ACT.share = function () {
+  const txt = shareText();
+  try { if (navigator.share) { navigator.share({ text: txt, url: CONFIG.PAGE_URL }).catch(function () { copyText(txt + ' ' + CONFIG.PAGE_URL); }); return; } } catch (e) { }
+  copyText(txt + ' ' + CONFIG.PAGE_URL);
+};
+ACT['share-x'] = function () { openNew('https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText()) + '&url=' + encodeURIComponent(CONFIG.PAGE_URL)); };
+ACT['share-li'] = function () { openNew('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(CONFIG.PAGE_URL)); };
+ACT['share-wa'] = function () { openNew('https://wa.me/?text=' + encodeURIComponent(shareText() + ' ' + CONFIG.PAGE_URL)); };
+ACT.print = function () {
+  const s = sn(); if (!s) return;
+  const rows = s.allocation.sectors.map(function (x) { return '<tr><td>' + esc(t('sec.' + x.key)) + ' (' + esc(x.ticker) + ')</td><td>' + esc(t('act.' + x.action)) + '</td><td>' + pc(x.weight, 1) + '</td></tr>'; }).join('');
+  $('#rmf-print').innerHTML = '<h1>' + esc(t('title')) + '</h1><p><b>' + esc(t('print.date')) + ' :</b> ' + esc(dtfmt(s.generated_at)) + ' (' + esc(t('strip.asof')) + ' ' + esc(dfmt(s.asof)) + ')</p>' +
+    '<h2>' + esc(regName(s.inertia.current)) + '</h2><p>' + esc(t('reg.' + s.inertia.current + '.d')) + '</p><p>' + esc(t('radar.conf')) + ' : ' + nf(s.regime.confidence, 0) + ' % · ' + esc(t('radar.bubble')) + ' : ' + nf(s.bubble.score, 0) + ' / 100 (' + esc(t('tier.' + s.bubble.tier)) + ')</p>' +
+    '<table><tr><th>' + esc(t('col.sector')) + '</th><th>' + esc(t('col.action')) + '</th><th>' + esc(t('col.weight')) + '</th></tr>' + rows + '</table><p style="font-size:11px">' + esc(t('disclaimer')) + '</p>';
+  try { window.print(); } catch (e) { toast(t('print.blocked')); }
+};
+
+/* ============================================================================
+   ONGLET 2 : ALLOCATION (tri par priorité, simulateur de capital, export CSV/TSV)
+   ========================================================================== */
+function etfOf(key) { const x = spec().sectors.filter(function (s) { return s.key === key; })[0]; return x ? x.ucits : null; }
+function justetf(isin) { return 'https://www.justetf.com/' + S.lang + '/etf-profile.html?isin=' + encodeURIComponent(isin); }
+function etfCell(key) {
+  const u = etfOf(key); if (!u) return t('nd');
+  return '<a href="' + justetf(u.isin) + '" target="_blank" rel="noopener">' + esc(u.isin) + '</a>' + (u.isin_verified ? '' : ' <span class="badge y" title="' + esc(t('etf.unverified')) + '">?</span>');
+}
+function peaBadge(u) { return u && u.pea ? '<span class="badge g">' + esc(t('pea.yes')) + '</span>' : '<span class="badge r">' + esc(t('pea.no')) + '</span>'; }
+function rangeBadge(r) { const c = { low: 'g', mid: '', high: 'y' }[r] || ''; return '<span class="badge ' + c + '">' + esc(t('range.' + r)) + '</span>'; }
+RENDER.alloc = function () {
+  const s = sn(); if (!s) return missing('snapshot');
+  const A = s.allocation, cap = store.get('capital', 10000);
+  let h = '<div class="card"><h2>' + esc(t('alloc.title')) + '</h2><div class="grid s"><div class="kpi"><b style="color:' + RC[A.regime_used] + '">' + esc(regName(A.regime_used)) + '</b><span>' + esc(t('alloc.regime')) + '</span></div><div class="kpi"><b>' + esc(t('tier.' + s.bubble.tier)) + '</b><span>' + esc(t('radar.bubble')) + '</span></div><div class="kpi"><b>+' + A.tier_effective + '</b><span>' + esc(t('alloc.tilt')) + '</span></div></div>' +
+    (A.blend ? '<div class="note warn" style="margin-top:10px">' + esc(t('alloc.blend', { a: regName(A.blend[0]), b: regName(A.blend[1]) })) + '</div>' : '') +
+    '<p class="mut">' + esc(t('alloc.sorted')) + '</p>' +
+    '<div class="grid" style="margin:10px 0"><label class="fld">' + esc(t('alloc.capital')) + '<input type="number" inputmode="decimal" min="0" step="100" value="' + cap + '" data-in="cap"></label>' +
+    '<div class="bar" style="justify-content:flex-start;align-items:flex-end;margin:0"><button type="button" class="btn" data-act="exp-csv">CSV</button><button type="button" class="btn" data-act="exp-tsv">' + esc(t('btn.copytsv')) + '</button></div></div>';
+  h += rtable([{ h: '#', n: 1 }, { h: t('col.sector') }, { h: t('col.action') }, { h: t('col.weight'), n: 1 }, { h: t('col.amount'), n: 1 }, { h: t('col.base'), n: 1 }, { h: t('col.range') }, { h: t('col.etf') }, { h: t('col.ter'), n: 1 }, { h: t('col.pea') }],
+    A.sectors.map(function (x) {
+      const u = etfOf(x.key) || {};
+      return [x.rank, '<b>' + esc(t('sec.' + x.key)) + '</b> <span class="mut">' + esc(x.ticker) + '</span>', actBadge(x.action), '<b>' + pc(x.weight, 1) + '</b>', '<span data-amt="' + x.weight + '">' + eur(cap * x.weight / 100) + '</span>', pc(x.base_weight, 1), x.range_label ? rangeBadge(x.range_label) : t('nd'), etfCell(x.key), pc(u.ter, 2), peaBadge(u)];
+    })) + '</div>';
+  h += '<div class="note">' + esc(t('alloc.pea.note')) + '</div><div class="note">' + esc(t('alloc.etf.note')) + '</div>';
+  return h;
+};
+ACT.cap = function (a) { const v = Math.max(0, parseNum(a.value) || 0); store.set('capital', v); $$('[data-amt]').forEach(function (c) { c.textContent = eur(v * parseFloat(c.dataset.amt) / 100); }); };
+function exportRows() {
+  const s = sn(), cap = store.get('capital', 10000), sep = '\t';
+  const head = [t('col.rank'), t('col.sector'), 'Ticker', t('col.action'), t('col.weight') + ' %', t('col.amount') + ' EUR', 'ETF UCITS', 'ISIN', 'TER %', t('col.pea')];
+  const rows = s.allocation.sectors.map(function (x) { const u = etfOf(x.key) || {}; return [x.rank, t('sec.' + x.key), x.ticker, t('act.' + x.action), numStr(x.weight, 2), numStr(cap * x.weight / 100, 0), u.name || '', u.isin || '', numStr(u.ter, 2), u.pea ? t('pea.yes') : t('pea.no')]; });
+  return { head: head, rows: rows, sep: sep };
+}
+ACT['exp-tsv'] = function () { if (!sn()) return; const e = exportRows(); copyText([e.head].concat(e.rows).map(function (r) { return r.join('\t'); }).join('\n')); };
+ACT['exp-csv'] = function () {
+  if (!sn()) return; const e = exportRows(), q = function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; };
+  saveFile('radar-macro-fire-allocation.csv', 'text/csv', '﻿' + [e.head].concat(e.rows).map(function (r) { return r.map(q).join(';'); }).join('\n'));
+};
+
+/* ============================================================================
+   ONGLET 3 : HEATMAP SECTORIELLE
+   ========================================================================== */
+RENDER.heat = function () {
+  const s = sn(); if (!s) return missing('snapshot');
+  const f = S.heat.f, so = S.heat.sort;
+  let rows = s.allocation.sectors.filter(function (x) { return f === 'all' || x.kind === f; });
+  rows = rows.slice().sort(function (a, b) { return (b[so] == null ? -1e9 : b[so]) - (a[so] == null ? -1e9 : a[so]); });
+  const chip = function (k, lab) { return '<button type="button" class="chip' + (S.heat.f === k ? ' on' : '') + '" data-act="heat-f" data-k="' + k + '">' + esc(lab) + '</button>'; };
+  const opts = ['weight', 'mom_1m', 'mom_3m', 'mom_6m', 'rel_strength_3m', 'vs_ma50', 'vs_ma200'].map(function (k) { return '<option value="' + k + '"' + (k === so ? ' selected' : '') + '>' + esc(t('hm.' + k)) + '</option>'; }).join('');
+  return '<div class="card"><h2>' + esc(t('heat.title')) + '</h2><p class="mut">' + esc(t('heat.d')) + '</p><div class="chips">' + chip('all', t('heat.all')) + chip('defensive', t('heat.def')) + chip('cyclical', t('heat.cyc')) + '</div>' +
+    '<label class="fld" style="max-width:320px;margin-bottom:10px">' + esc(t('heat.sort')) + '<select data-ch="heat-s">' + opts + '</select></label>' +
+    rtable([{ h: t('col.sector') }, { h: t('col.kind') }, { h: '1M', n: 1 }, { h: '3M', n: 1 }, { h: '6M', n: 1 }, { h: t('hm.rel_strength_3m'), n: 1 }, { h: t('hm.vs_ma50'), n: 1 }, { h: t('hm.vs_ma200'), n: 1 }, { h: t('col.range') }],
+      rows.map(function (x) { return ['<b>' + esc(t('sec.' + x.key)) + '</b> <span class="mut">' + esc(x.ticker) + '</span>', esc(t('kind.' + x.kind)), heatCell(x.mom_1m, 8), heatCell(x.mom_3m, 15), heatCell(x.mom_6m, 25), heatCell(x.rel_strength_3m, 8), heatCell(x.vs_ma50, 8), heatCell(x.vs_ma200, 15), x.range_label ? rangeBadge(x.range_label) : t('nd')]; })) + '</div>';
+};
+ACT['heat-f'] = function (a) { S.heat.f = a.dataset.k; renderTab('heat'); };
+ACT['heat-s'] = function (a) { S.heat.sort = a.value; renderTab('heat'); };
+
+/* ============================================================================
+   ONGLET 4 : PAGES SECTORIELLES (accordéon, sans ancres)
+   ========================================================================== */
+RENDER.sectors = function () {
+  const s = sn(), sp = spec(); const live = {}; if (s) s.allocation.sectors.forEach(function (x) { live[x.key] = x; });
+  const avg = 100 / sp.sectors.length;
+  return '<div class="card"><h2>' + esc(t('sect.title')) + '</h2><p class="mut">' + esc(t('sect.d')) + '</p></div>' + sp.sectors.map(function (S_) {
+    const L = live[S_.key] || {}, u = S_.ucits;
+    const bars = sp.regimes.map(function (rg) {
+      const w = S_.base[rg], ctx = w >= avg * 1.4 ? 'ctx.strong' : (w >= avg * .9 ? 'ctx.neutral' : 'ctx.weak');
+      return '<div style="margin:8px 0"><div class="row" style="border:0;padding:0"><span>' + regBadge(rg) + (s && s.inertia.current === rg ? ' <span class="badge o">' + esc(t('sect.now')) + '</span>' : '') + '</span><b>' + pc(w, 0) + '</b></div><div class="meter" style="margin:4px 0"><i style="width:' + Math.min(100, w * 3.5) + '%;background:' + RC[rg] + '"></i></div><div class="mut">' + esc(t(ctx, { w: w })) + '</div></div>';
+    }).join('');
+    return '<details><summary><span>' + esc(t('sec.' + S_.key)) + ' <span class="mut">' + esc(S_.ticker) + '</span></span><span>' + (L.action ? actBadge(L.action) : '') + '</span></summary><div class="bd">' +
+      '<p>' + esc(t('sec.' + S_.key + '.d')) + '</p><h3>' + esc(t('sect.ctx')) + '</h3>' + bars +
+      '<h3 style="margin-top:12px">' + esc(t('sect.perf')) + '</h3>' + (L.price != null ? '<div class="grid s"><div class="kpi"><b>' + heatCell(L.mom_1m, 8) + '</b><span>1M</span></div><div class="kpi"><b>' + heatCell(L.mom_3m, 15) + '</b><span>3M</span></div><div class="kpi"><b>' + heatCell(L.mom_6m, 25) + '</b><span>6M</span></div><div class="kpi"><b>' + heatCell(L.rel_strength_3m, 8) + '</b><span>' + esc(t('hm.rel_strength_3m')) + '</span></div></div><p class="mut">' + esc(t('hm.vs_ma50')) + ' : ' + pc(L.vs_ma50, 1, true) + ' · ' + esc(t('hm.vs_ma200')) + ' : ' + pc(L.vs_ma200, 1, true) + ' · ' + (L.range_label ? esc(t('range.' + L.range_label)) : '') + '</p>' : '<p class="mut">' + esc(t('nd')) + '</p>') +
+      '<h3>' + esc(t('sect.etf')) + '</h3><p>' + esc(u.name) + '<br><span class="mut">ISIN </span>' + etfCell(S_.key) + ' · <span class="mut">TER </span>' + pc(u.ter, 2) + ' · ' + peaBadge(u) + (u.approx ? ' <span class="badge y">' + esc(t('etf.approx')) + '</span>' : '') + '<br><span class="mut">' + esc(t('sect.proxy')) + ' : ' + esc(S_.ticker) + '</span></p>' +
+      '<h3>' + esc(t('sect.risks')) + '</h3><p>' + esc(t('sec.' + S_.key + '.r')) + '</p></div></details>';
+  }).join('');
+};
+
+/* ============================================================================
+   ONGLET 5 : BACKTEST (Canvas, bandes de régime, métriques, alpha par régime)
+   ========================================================================== */
+function metricRows(m) {
+  const k = [['total_return', 'pc'], ['cagr', 'pc'], ['vol', 'pc'], ['sharpe', 'n'], ['max_drawdown', 'pc'], ['win_rate_monthly', 'pc']];
+  return k.map(function (x) {
+    const f = function (o) { return o ? (x[1] === 'pc' ? pc(o[x[0]], 1) : nf(o[x[0]], 2)) : t('nd'); };
+    return ['<b>' + esc(t('m.' + x[0])) + '</b>', f(m.portfolio), f(m.portfolio_net), f(m.vt), f(m.spy)];
+  });
+}
+function metricTable(m) { return rtable([{ h: t('m.metric') }, { h: t('bt.radar'), n: 1 }, { h: t('bt.radar.net'), n: 1 }, { h: 'VT', n: 1 }, { h: 'S&P 500', n: 1 }], metricRows(m)); }
+function btData() {
+  const b = S.data.backtest, c = b.curves; let i0 = 0;
+  if (S.bt.win === 'ucits' && b.metrics_ucits_window) { const st = b.metrics_ucits_window.window.start; i0 = Math.max(0, c.dates.findIndex(function (d) { return d >= st; })); }
+  const sl = function (a) { const base = a[i0]; return a.slice(i0).map(function (v) { return v == null ? null : v / base * 100; }); };
+  return { dates: c.dates.slice(i0), p: sl(c.portfolio), n: sl(c.portfolio_net), vt: sl(c.vt), spy: sl(c.spy) };
+}
+function drawBt() {
+  const b = S.data.backtest; const cv = $('#bt-cv'); if (!b || !cv) return;
+  const d = btData(), cfg = { x: d.dates, height: 320, series: [], bands: [], yFmt: function (v) { return nf(v, 0); }, xFmt: function (v) { return v.slice(0, 4); } };
+  cfg.series.push({ color: cssv('--or'), data: d.p, w: 2.4 });
+  if (S.bt.net) cfg.series.push({ color: '#ffb27a', data: d.n, dash: [5, 3], w: 1.6 });
+  if (S.bt.vt) cfg.series.push({ color: '#60a5fa', data: d.vt, w: 1.6 });
+  if (S.bt.spy) cfg.series.push({ color: cssv('--tx2'), data: d.spy, w: 1.4 });
+  if (S.bt.bands) b.regime_bands.forEach(function (bd) {
+    const i0 = d.dates.findIndex(function (x) { return x >= bd.start; }); let i1 = d.dates.findIndex(function (x) { return x >= bd.end; }); if (i1 < 0) i1 = d.dates.length - 1;
+    if (i0 >= 0 && i1 > i0) cfg.bands.push({ i0: i0, i1: i1, color: RC[bd.regime] + '24' });
+  });
+  const geo = drawChart(cv, cfg); if (!geo) return;
+  attachTip(cv, $('#bt-tip'), geo, cfg, function (i) {
+    const dt = d.dates[i], bd = b.regime_bands.filter(function (x) { return x.start <= dt && dt <= x.end; })[0];
+    return '<b>' + esc(dfmt(dt)) + '</b>' + (bd ? '<br>' + regBadge(bd.regime) : '') + '<br>' + esc(t('bt.radar')) + ' ' + nf(d.p[i], 0) + (S.bt.net ? '<br>' + esc(t('bt.radar.net')) + ' ' + nf(d.n[i], 0) : '') + (S.bt.vt ? '<br>VT ' + nf(d.vt[i], 0) : '') + (S.bt.spy ? '<br>S&P 500 ' + nf(d.spy[i], 0) : '');
+  });
+}
+RENDER.backtest = function () {
+  const b = S.data.backtest; if (!b) return missing('backtest');
+  const ch = function (k) { return '<button type="button" class="chip' + (S.bt[k] ? ' on' : '') + '" data-act="bt-t" data-k="' + k + '">' + esc(t('bt.t.' + k)) + '</button>'; };
+  let h = '<div class="card"><h2>' + esc(t('bt.title')) + '</h2><p class="mut">' + esc(t('bt.d')) + '</p><div class="note warn">' + esc(t('bt.honest')) + '</div>' +
+    '<div class="chips">' + ch('net') + ch('vt') + ch('spy') + ch('bands') + '</div>' +
+    (b.metrics_ucits_window ? '<label class="fld" style="max-width:360px;margin-bottom:8px">' + esc(t('bt.win')) + '<select data-ch="bt-w"><option value="full"' + (S.bt.win === 'full' ? ' selected' : '') + '>' + esc(t('bt.win.full', { a: b.period.start.slice(0, 4) })) + '</option><option value="ucits"' + (S.bt.win === 'ucits' ? ' selected' : '') + '>' + esc(t('bt.win.ucits', { a: b.metrics_ucits_window.window.start.slice(0, 4) })) + '</option></select></label>' : '') +
+    '<div class="cvw"><canvas id="bt-cv" class="cv"></canvas><div class="tip" id="bt-tip"></div></div>' +
+    '<div class="leg">' + Object.keys(RC).map(function (k) { return '<span><b style="background:' + RC[k] + '"></b>' + esc(regName(k)) + '</span>'; }).join('') + '</div><p class="mut">' + esc(dfmt(b.period.start)) + ' → ' + esc(dfmt(b.period.end)) + ' · ' + esc(t('updated')) + ' ' + esc(dfmt(b.generated_at)) + '</p></div>';
+  h += '<div class="card"><h2>' + esc(t('bt.metrics')) + ' <span class="mut" style="font-size:13px">' + esc(dfmt(b.period.start)) + ' → ' + esc(dfmt(b.period.end)) + '</span></h2>' + metricTable(b.metrics) + '</div>';
+  if (b.metrics_ucits_window) h += '<div class="card"><h2>' + esc(t('bt.metrics.u')) + ' <span class="mut" style="font-size:13px">' + esc(dfmt(b.metrics_ucits_window.window.start)) + ' → ' + esc(dfmt(b.metrics_ucits_window.window.end)) + '</span></h2><p class="mut">' + esc(t('bt.metrics.u.d')) + '</p>' + metricTable(b.metrics_ucits_window) + '</div>';
+  const al = b.alpha_by_regime || {};
+  h += '<div class="grid"><div class="card"><h2>' + esc(t('bt.alpha')) + '</h2>' + rtable([{ h: t('col.regime') }, { h: t('bt.share'), n: 1 }, { h: t('bt.radar'), n: 1 }, { h: 'VT', n: 1 }, { h: 'Alpha', n: 1 }],
+    Object.keys(al).map(function (k) { const a = al[k]; return [regBadge(k), pc(a.share_pct, 0), pc(a.portfolio_ann, 1, true), pc(a.vt_ann, 1, true), '<b style="color:' + (a.alpha_ann >= 0 ? 'var(--ok)' : 'var(--ko)') + '">' + pc(a.alpha_ann, 1, true) + '</b>']; })) + '<p class="mut">' + esc(t('bt.alpha.d')) + '</p></div>' +
+    '<div class="card"><h2>' + esc(t('bt.turn')) + '</h2><div class="grid s"><div class="kpi"><b>' + pc(b.turnover.annual_one_way_pct, 0) + '</b><span>' + esc(t('bt.turn.a')) + '</span></div><div class="kpi"><b>' + b.turnover.regime_changes + '</b><span>' + esc(t('bt.turn.c')) + '</span></div></div><p class="mut">' + esc(t('bt.turn.d')) + '</p></div></div>';
+  h += '<div class="card"><h2>' + esc(t('bt.universe')) + '</h2><p class="mut">' + esc(t('bt.universe.d')) + '</p>' + rtable([{ h: t('col.sector') }, { h: 'ISIN' }, { h: t('bt.ucits.start') }, { h: t('bt.proxy') }], b.universe.map(function (u) { return [esc(t('sec.' + u.key)), esc(u.ucits_isin), u.ucits_start ? esc(dfmt(u.ucits_start)) : '<span class="badge y">' + esc(t('bt.noucits')) + '</span>', esc(u.us_proxy)]; })) + '</div>';
+  h += '<div class="card"><h2>' + esc(t('bt.limits')) + '</h2>' + (b.method ? '<p class="mut">' + esc(b.method) + '</p>' : '') + '<ul>' + (b.limits || []).map(function (x) { return '<li class="mut">' + esc(x) + '</li>'; }).join('') + '</ul></div>';
+  return h;
+};
+RENDER.backtest_after = function () { drawBt(); };
+RENDER.backtest_resize = function () { drawBt(); };
+ACT['bt-t'] = function (a) { S.bt[a.dataset.k] = !S.bt[a.dataset.k]; renderTab('backtest'); };
+ACT['bt-w'] = function (a) { S.bt.win = a.value; renderTab('backtest'); };
+
+/* ============================================================================
+   ONGLET 6 : HISTORIQUE DES RÉGIMES ET PROBABILITÉS DE TRANSITION
+   ========================================================================== */
+function matMul(A, B, regs) { const o = {}; regs.forEach(function (a) { o[a] = {}; regs.forEach(function (c) { o[a][c] = regs.reduce(function (s, b) { return s + (A[a][b] || 0) * (B[b][c] || 0); }, 0); }); }); return o; }
+RENDER.history = function () {
+  const s = sn(), tr = S.data.transitions, hs = S.data.history, sp = spec(), regs = sp.regimes; let h = '';
+  const cur = s ? s.inertia.current : null;
+  let m3 = tr && tr.matrix_3m, src = 'emp';
+  if (!m3 || (cur && (!m3[cur] || m3[cur][regs[0]] == null))) { const f = sp.transition_fallback_1m; m3 = matMul(matMul(f, f, regs), f, regs); src = 'fb'; }
+  h += '<div class="card"><h2>' + esc(t('hist.prob')) + '</h2>';
+  if (src === 'fb') h += '<div class="note warn">' + esc(t('hist.fallback')) + '</div>';
+  if (cur) {
+    h += '<p class="mut">' + esc(t('hist.prob.d', { r: regName(cur) })) + '</p>' + regs.map(function (rg) { const p = m3[cur][rg] || 0; return '<div style="margin:8px 0"><div class="row" style="border:0;padding:0"><span>' + regBadge(rg) + (rg === cur ? ' <span class="mut">' + esc(t('hist.stay')) + '</span>' : '') + '</span><b>' + pc(p * 100, 0) + '</b></div><div class="meter"><i style="width:' + p * 100 + '%;background:' + RC[rg] + '"></i></div></div>'; }).join('');
+    const d = s.regime.distance_to_switch;
+    h += '<div class="note" style="margin-top:12px"><b>' + esc(t('hist.dist')) + ' :</b> ' + esc(t('hist.dist.d', { p: nf(d.points, 0), ax: d.axis === 'G' ? t('axis.g') : t('axis.i'), G: nf(s.regime.G, 0, true), I: nf(s.regime.I, 0, true) })) + '</div><div class="meter"><i style="width:' + Math.min(100, d.points) + '%"></i></div>';
+  } else h += missing('snapshot');
+  if (tr) {
+    h += '<h3 style="margin-top:14px">' + esc(t('hist.matrix')) + '</h3>' + rtable([{ h: t('hist.from') }].concat(regs.map(function (r) { return { h: regName(r), n: 1 }; })), regs.map(function (a) { return [regBadge(a)].concat(regs.map(function (b) { const p = tr.matrix_3m[a] && tr.matrix_3m[a][b]; return p == null ? t('nd') : '<span class="hm" style="background:rgba(255,85,0,' + (p * .7).toFixed(2) + ')">' + pc(p * 100, 0) + '</span>'; })); })) +
+      '<p class="mut">' + esc(t('hist.dur')) + ' : ' + regs.map(function (r) { return esc(regName(r)) + ' ' + nf(tr.avg_duration_days && tr.avg_duration_days[r], 0) + ' ' + esc(t('days')); }).join(' · ') + '</p><p class="mut">' + esc(tr.note || '') + '</p>';
+  } else h += missing('transitions');
+  h += '</div><div class="card"><h2>' + esc(t('hist.list')) + '</h2>';
+  if (!hs || !hs.entries) return h + missing('history') + '</div>';
+  const perf = {}; if (s) (s.history_perf || []).forEach(function (p) { perf[p.date] = p; });
+  const E = hs.entries.slice().reverse();
+  h += '<p class="mut">' + esc(t('hist.list.d')) + '</p>' + rtable([{ h: t('col.date') }, { h: t('hist.change') }, { h: t('hist.elapsed'), n: 1 }, { h: t('hist.spy'), n: 1 }, { h: t('hist.port'), n: 1 }],
+    E.slice(0, 60).map(function (e, i) {
+      const end = i === 0 ? Date.now() : Date.parse(E[i - 1].date + 'T12:00:00Z'), days = Math.round((end - Date.parse(e.date + 'T12:00:00Z')) / 864e5), p = perf[e.date];
+      return [esc(dfmt(e.date)) + (e.bootstrap ? ' <span class="badge">' + esc(t('hist.boot')) + '</span>' : ''), regBadge(e.from) + ' → ' + regBadge(e.to), days + ' ' + esc(t('days')), p ? heatCell(p.spy, 10) : t('nd'), p ? heatCell(p.portfolio, 10) : t('nd')];
+    })) + '<p class="mut">' + esc(t('hist.perf.d')) + '</p></div>';
+  return h;
+};
+
+/* ============================================================================
+   ONGLET 7 : PATRIMOINE (Google Sheets gviz JSONP ou saisie manuelle) vs cible du régime
+   ========================================================================== */
+const ENVS = ['PEA', 'CTO', 'AV', 'PER', 'SCPI'], CLS = ['actions', 'obligations', 'or_matieres', 'immobilier', 'cash'];
+function emptyMat() { const m = {}; ENVS.forEach(function (e) { m[e] = {}; CLS.forEach(function (c) { m[e][c] = 0; }); }); return m; }
+function patri() { if (!S.patri) { S.patri = store.get('patri', null) || { mat: emptyMat(), src: 'manual', ts: null }; } return S.patri; }
+function normEnv(s) {
+  s = String(s || '').toLowerCase();
+  if (/scpi|pierre/.test(s)) return 'SCPI'; if (/\bper\b|retraite|perp|madelin|perco/.test(s)) return 'PER'; if (/assurance|\bav\b|vie|luxemb/.test(s)) return 'AV';
+  if (/pea/.test(s)) return 'PEA'; if (/\bcto\b|compte.?titre|courtier|bourse/.test(s)) return 'CTO'; return null;
+}
+function normCls(s) {
+  s = String(s || '').toLowerCase();
+  if (/oblig|bond|fonds euro|taux/.test(s)) return 'obligations'; if (/\bor\b|m[eé]tal|mati[eè]re|commodit|gold/.test(s)) return 'or_matieres';
+  if (/scpi|immo|pierre|reit/.test(s)) return 'immobilier'; if (/cash|liquid|livret|[eé]pargne|mon[eé]taire|fonds euro/.test(s)) return 'cash'; if (/action|etf|equity|bourse|actions/.test(s)) return 'actions'; return null;
+}
+function gvizLoad(id, sheet) {
+  return new Promise(function (res, rej) {
+    const cb = '__rmf_gv' + Date.now(); let done = false, to;
+    const s = document.createElement('script');
+    const cleanup = function () { clearTimeout(to); try { delete window[cb]; } catch (e) { window[cb] = undefined; } s.remove(); };
+    window[cb] = function (r) { done = true; cleanup(); res(r); };
+    s.onerror = function () { cleanup(); rej(new Error('network')); };
+    to = setTimeout(function () { if (!done) { cleanup(); rej(new Error('timeout')); } }, 12000);
+    s.src = 'https://docs.google.com/spreadsheets/d/' + encodeURIComponent(id) + '/gviz/tq?tqx=out:json;responseHandler:' + cb + '&headers=1' + (sheet ? '&sheet=' + encodeURIComponent(sheet) : '');
+    document.head.appendChild(s);
+  });
+}
+function parseGviz(r) {
+  if (!r || r.status === 'error' || !r.table) throw new Error((r && r.errors && r.errors[0] && r.errors[0].detailed_message) || 'gviz');
+  let cols = r.table.cols.map(function (c) { return c.label || ''; }), rows = r.table.rows.map(function (x) { return (x.c || []).map(function (c) { return c ? (c.v != null ? c.v : c.f) : null; }); });
+  if (cols.every(function (c) { return !c; }) && rows.length) { cols = rows[0].map(function (v) { return v == null ? '' : String(v); }); rows = rows.slice(1); }
+  return { cols: cols, rows: rows };
+}
+function guessMap(cols) {
+  const f = function (re) { const i = cols.findIndex(function (c) { return re.test(c.toLowerCase()); }); return i; };
+  return { env: f(/enveloppe|compte|support|contrat|type de compte|placement/), cls: f(/classe|cat[eé]gorie|type d.actif|actif/), amt: f(/montant|valeur|total|encours|solde|capital|valorisation/) };
+}
+function aggregate(sheet, map) {
+  const m = emptyMat(); let assumed = 0, used = 0;
+  sheet.rows.forEach(function (r) {
+    const env = normEnv(r[map.env]), a = parseNum(r[map.amt]); if (!env || !isFinite(a) || a <= 0) return;
+    let c = map.cls >= 0 ? normCls(r[map.cls]) : null;
+    if (!c) { c = env === 'SCPI' ? 'immobilier' : 'actions'; if (env === 'AV' || env === 'PER') assumed++; }
+    m[env][c] += a; used++;
+  });
+  return { mat: m, assumed: assumed, used: used };
+}
+function totals(mat) { const byC = {}, byE = {}; let tot = 0; CLS.forEach(function (c) { byC[c] = 0; }); ENVS.forEach(function (e) { byE[e] = 0; CLS.forEach(function (c) { const v = mat[e][c] || 0; byC[c] += v; byE[e] += v; tot += v; }); }); return { byC: byC, byE: byE, tot: tot }; }
+function targetsNow() { const s = sn(); return s ? s.allocation.asset_classes : null; }
+function suggestions(mat, T, tg) {
+  const sp = spec().envelopes, thr = Math.max(100, T.tot * .01), out = [];
+  const gaps = CLS.map(function (c) { const target = tg[c] / 100 * T.tot; return { c: c, diff: target - T.byC[c], rem: 0 }; });
+  const sur = gaps.filter(function (g) { return g.diff < -thr; }).map(function (g) { return { c: g.c, rem: -g.diff }; }).sort(function (a, b) { return b.rem - a.rem; });
+  const def = gaps.filter(function (g) { return g.diff > thr; }).sort(function (a, b) { return b.diff - a.diff; });
+  const avail = JSON.parse(JSON.stringify(mat));
+  def.forEach(function (d) {
+    let need = d.diff;
+    sur.forEach(function (s_) {
+      if (need < thr || s_.rem < thr) return;
+      const amt = Math.min(need, s_.rem);
+      const from = sp.sell_priority.filter(function (e) { return avail[e][s_.c] >= thr; })[0] || null;
+      const to = (sp.buy_priority[d.c] || ENVS)[0];
+      const take = from ? Math.min(amt, avail[from][s_.c]) : amt; if (from) avail[from][s_.c] -= take;
+      out.push({ fromC: s_.c, fromE: from, toC: d.c, toE: to, amt: take }); s_.rem -= take; need -= take;
+    });
+    if (need >= thr) out.push({ fromC: null, toC: d.c, toE: (sp.buy_priority[d.c] || ENVS)[0], amt: need, flow: true });
+  });
+  return out;
+}
+function wealthResults() {
+  const P = patri(), T = totals(P.mat), tg = targetsNow();
+  if (T.tot <= 0) return '<div class="note">' + esc(t('we.empty')) + '</div>';
+  if (!tg) return missing('snapshot');
+  let h = '<h3>' + esc(t('we.gap')) + '</h3>' + rtable([{ h: t('col.class') }, { h: t('we.actual'), n: 1 }, { h: t('we.target'), n: 1 }, { h: t('we.diff'), n: 1 }, { h: t('we.diffe'), n: 1 }],
+    CLS.map(function (c) { const a = T.byC[c] / T.tot * 100, d = tg[c] - a; return ['<b>' + esc(t('cls.' + c)) + '</b>', pc(a, 1) + ' <span class="mut">' + eur(T.byC[c]) + '</span>', pc(tg[c], 1), '<b style="color:' + (Math.abs(d) < 2 ? 'var(--tx)' : (d > 0 ? 'var(--ok)' : 'var(--ko)')) + '">' + pc(d, 1, true) + '</b>', eur(d / 100 * T.tot)]; }));
+  const sg = suggestions(P.mat, T, tg);
+  h += '<h3 style="margin-top:14px">' + esc(t('we.sugg')) + '</h3>';
+  if (!sg.length) h += '<div class="note">' + esc(t('we.ok')) + '</div>';
+  else {
+    h += sg.map(function (x) {
+      let txt = x.flow ? t('we.flow', { amt: eur(x.amt), c: t('cls.' + x.toC), e: x.toE }) : t('we.move', { amt: eur(x.amt), a: t('cls.' + x.fromC), ea: x.fromE || t('nd'), b: t('cls.' + x.toC), eb: x.toE });
+      const hints = []; if (x.fromE === 'CTO') hints.push(t('we.h.cto')); if (x.toE === 'PEA') hints.push(t('we.h.pea')); if (x.toE === 'SCPI') hints.push(t('we.h.scpi')); if (x.fromE === 'PEA') hints.push(t('we.h.peasell')); hints.push(t('we.h.flow'));
+      return '<div class="note"><b>' + esc(txt) + '</b><br>' + esc(hints.join(' ')) + '</div>';
+    }).join('');
+  }
+  h += '<h3 style="margin-top:14px">' + esc(t('we.byenv')) + '</h3>' + rtable([{ h: t('col.env') }, { h: t('we.amount'), n: 1 }, { h: t('we.share'), n: 1 }], ENVS.map(function (e) { return ['<b>' + e + '</b>', eur(T.byE[e]), pc(T.byE[e] / T.tot * 100, 1)]; })) + '<p class="mut">' + esc(t('we.disc')) + '</p>';
+  return h;
+}
+RENDER.wealth = function () {
+  const P = patri(), sh = store.get('sheet', { id: '', name: '' }), sS = S.sheet;
+  let h = '<div class="card"><h2>' + esc(t('we.title')) + '</h2><p class="mut">' + esc(t('we.d')) + '</p><div class="note">' + esc(t('we.privacy')) + '</div>' +
+    '<div class="grid"><label class="fld">' + esc(t('we.sheetid')) + '<input type="text" id="sh-id" value="' + esc(sh.id) + '" autocomplete="off" placeholder="1AbC..."></label><label class="fld">' + esc(t('we.sheetname')) + '<input type="text" id="sh-name" value="' + esc(sh.name) + '" autocomplete="off"></label></div>' +
+    '<div class="bar" style="justify-content:flex-start;margin:10px 0 0"><button type="button" class="btn pri" data-act="sheet-load">' + esc(t('we.load')) + '</button><button type="button" class="btn" data-act="patri-clear">' + esc(t('we.clear')) + '</button></div><div id="sh-msg" class="mut" style="margin-top:8px">' + (P.ts ? esc(t('we.saved', { d: dtfmt(P.ts), s: t('we.src.' + P.src) })) : '') + '</div>';
+  if (sS) {
+    const opt = function (sel) { return '<option value="-1">' + esc(t('we.none')) + '</option>' + sS.cols.map(function (c, i) { return '<option value="' + i + '"' + (i === sel ? ' selected' : '') + '>' + esc(c || ('#' + (i + 1))) + '</option>'; }).join(''); };
+    h += '<h3 style="margin-top:12px">' + esc(t('we.map')) + '</h3><div class="grid"><label class="fld">' + esc(t('col.env')) + '<select data-ch="map" data-r="env">' + opt(sS.map.env) + '</select></label><label class="fld">' + esc(t('col.class')) + '<select data-ch="map" data-r="cls">' + opt(sS.map.cls) + '</select></label><label class="fld">' + esc(t('we.amount')) + '<select data-ch="map" data-r="amt">' + opt(sS.map.amt) + '</select></label></div>';
+  }
+  h += '</div><div class="card"><h2>' + esc(t('we.manual')) + '</h2><p class="mut">' + esc(t('we.manual.d')) + '</p>' +
+    rtable([{ h: t('col.env') }].concat(CLS.map(function (c) { return { h: t('cls.' + c), n: 1 }; })), ENVS.map(function (e) { return ['<b>' + e + '</b>'].concat(CLS.map(function (c) { return '<input type="number" inputmode="decimal" min="0" step="100" style="min-width:90px;text-align:right" value="' + (P.mat[e][c] || '') + '" data-in="pm" data-e="' + e + '" data-c="' + c + '">'; })); })) + '</div>' +
+    '<div class="card"><h2>' + esc(t('we.res')) + '</h2><div id="wealth-res">' + wealthResults() + '</div></div>';
+  return h;
+};
+function savePatri(src) { const P = patri(); P.src = src; P.ts = new Date().toISOString(); store.set('patri', P); }
+ACT.pm = function (a) { const P = patri(); P.mat[a.dataset.e][a.dataset.c] = Math.max(0, parseNum(a.value) || 0); savePatri('manual'); const el = $('#wealth-res'); if (el) el.innerHTML = wealthResults(); };
+ACT['patri-clear'] = function () { S.patri = { mat: emptyMat(), src: 'manual', ts: null }; store.del('patri'); S.sheet = null; renderTab('wealth'); };
+ACT.map = function (a) { if (!S.sheet) return; S.sheet.map[a.dataset.r] = parseInt(a.value, 10); const g = aggregate(S.sheet, S.sheet.map); patri().mat = g.mat; savePatri('sheet'); renderTab('wealth'); };
+ACT['sheet-load'] = async function () {
+  const id = ($('#sh-id').value || '').trim().replace(/^.*\/d\/([a-zA-Z0-9_-]+).*$/, '$1'), name = ($('#sh-name').value || '').trim(), msg = $('#sh-msg');
+  if (!id) { msg.textContent = t('we.noid'); return; }
+  store.set('sheet', { id: id, name: name }); msg.textContent = t('loading');
+  try {
+    const sheet = parseGviz(await gvizLoad(id, name)); sheet.map = guessMap(sheet.cols);
+    if (sheet.map.env < 0 || sheet.map.amt < 0) { S.sheet = sheet; msg.textContent = t('we.mapfail'); renderTab('wealth'); return; }
+    const g = aggregate(sheet, sheet.map); S.sheet = sheet; patri().mat = g.mat; savePatri('sheet'); renderTab('wealth');
+    const m2 = $('#sh-msg'); if (m2) m2.textContent = t('we.loaded', { n: g.used }) + (g.assumed ? ' ' + t('we.assumed', { n: g.assumed }) : '');
+  } catch (e) { msg.textContent = t('we.err') + ' (' + e.message + ')'; }
+};
+
+/* ============================================================================
+   ONGLET 8 : COMPARER (mon allocation, radar, All Weather)
+   ========================================================================== */
+function stackBar(v) { return '<div class="stack">' + CLS.map(function (c) { return '<i style="width:' + (v[c] || 0) + '%;background:' + CLASS_COL[c] + '" title="' + esc(t('cls.' + c)) + ' ' + nf(v[c] || 0, 0) + ' %"></i>'; }).join('') + '</div>'; }
+RENDER.compare = function () {
+  const tg = targetsNow(); if (!tg) return missing('snapshot');
+  const T = totals(patri().mat), mine = {}; const has = T.tot > 0; CLS.forEach(function (c) { mine[c] = has ? T.byC[c] / T.tot * 100 : null; });
+  const aw = spec().asset_classes.all_weather;
+  let h = '<div class="card"><h2>' + esc(t('cmp.title')) + '</h2><p class="mut">' + esc(t('cmp.d')) + '</p>' + (has ? '' : '<div class="note warn">' + esc(t('cmp.nomine')) + '</div>') +
+    [[t('cmp.mine'), mine, has], [t('cmp.radar'), tg, true], ['All Weather', aw, true]].map(function (x) { return '<div style="margin:12px 0"><div class="row" style="border:0;padding:0"><b>' + esc(x[0]) + '</b></div>' + (x[2] ? stackBar(x[1]) : '<div class="mut">' + esc(t('nd')) + '</div>') + '</div>'; }).join('') +
+    '<div class="leg">' + CLS.map(function (c) { return '<span><b style="background:' + CLASS_COL[c] + '"></b>' + esc(t('cls.' + c)) + '</span>'; }).join('') + '</div></div>';
+  h += '<div class="card">' + rtable([{ h: t('col.class') }, { h: t('cmp.mine'), n: 1 }, { h: t('cmp.radar'), n: 1 }, { h: 'All Weather', n: 1 }, { h: t('cmp.gap.r'), n: 1 }, { h: t('cmp.gap.a'), n: 1 }],
+    CLS.map(function (c) { return ['<b>' + esc(t('cls.' + c)) + '</b>', has ? pc(mine[c], 1) : t('nd'), pc(tg[c], 1), pc(aw[c], 1), has ? pc(mine[c] - tg[c], 1, true) : t('nd'), has ? pc(mine[c] - aw[c], 1, true) : t('nd')]; })) + '<p class="mut">' + esc(t('cmp.note')) + '</p></div>';
+  return h;
+};
+
+/* ============================================================================
+   ONGLET 9 : STRESS TEST FIRE (Monte Carlo léger dans un Web Worker, repli asynchrone)
+   ========================================================================== */
+// Cette fonction est sérialisée telle quelle vers le Web Worker (aucune dépendance externe).
+function rmfSim(P, scen, n, seed) {
+  function mk(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let x = Math.imul(a ^ a >>> 15, 1 | a); x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x; return ((x ^ x >>> 14) >>> 0) / 4294967296; }; }
+  const rnd = mk(seed);
+  function norm() { let u = 0; while (u === 0) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); }
+  const R = P.regs, years = Math.ceil(P.months / 12), sq = Math.sqrt(12), yearly = [];
+  for (let y = 0; y <= years; y++) yearly.push(new Float64Array(n));
+  const reached = new Uint8Array(n), survived = new Uint8Array(n), nmu = 0.025 / 12, nsg = 0.04 / sq, inf = P.infl / 12, total = P.months + P.retMonths;
+  for (let k = 0; k < n; k++) {
+    let reg = P.start, cap = P.cap; yearly[0][k] = cap; if (P.months === 0) reached[k] = cap >= P.target ? 1 : 0;
+    let alive = true;
+    for (let m = 0; m < total; m++) {
+      if (scen === 'stress' && m < 24) reg = 'stagflation';
+      else if (scen !== 'persist') { const row = P.M[reg]; let u = rnd(), acc = 0; for (let j = 0; j < R.length; j++) { acc += (row[R[j]] || 0); if (u <= acc) { reg = R[j]; break; } } }
+      const re = P.eq * (P.mu[reg] / 12 + P.sg[reg] / sq * norm()) + (1 - P.eq) * (nmu + nsg * norm()) - inf;
+      if (m < P.months) {
+        cap = cap * (1 + re) + P.save;
+        if ((m + 1) % 12 === 0 || m + 1 === P.months) { const yy = Math.min(years, Math.ceil((m + 1) / 12)); yearly[yy][k] = cap; }
+        if (m + 1 === P.months) reached[k] = cap >= P.target ? 1 : 0;
+      } else { cap = cap * (1 + re) - P.spend / 12; if (cap <= 0) { cap = 0; alive = false; break; } }
+    }
+    survived[k] = alive ? 1 : 0;
+  }
+  return { yearly: yearly, reached: reached, survived: survived };
+}
+function stressParams() {
+  const v = store.get('stress', null), T = totals(patri().mat), sp = spec();
+  const d = { cap: T.tot > 0 ? Math.round(T.tot) : 100000, save: 1000, years: 10, spend: 30000, swr: 3.5, ret: 40, infl: 2, eq: T.tot > 0 ? Math.round(Math.max(0, Math.min(100, T.byC.actions / T.tot * 100))) : 80, n: 2000 };
+  return Object.assign(d, v || {});
+}
+function stressModel() {
+  const sp = spec(), bt = S.data.backtest, tr = S.data.transitions, regs = sp.regimes, mu = {}, sg = {};
+  let srcStats = 'def';
+  regs.forEach(function (r) { const st = bt && bt.regime_stats && bt.regime_stats[r]; if (st && st.mu != null && st.sigma != null) { mu[r] = st.mu; sg[r] = st.sigma; srcStats = 'bt'; } else { mu[r] = sp.regime_stats_default[r].mu; sg[r] = sp.regime_stats_default[r].sigma; } });
+  const ok = tr && tr.matrix_1m && regs.every(function (a) { return tr.matrix_1m[a] && regs.every(function (b) { return tr.matrix_1m[a][b] != null; }); });
+  return { regs: regs, mu: mu, sg: sg, M: ok ? tr.matrix_1m : sp.transition_fallback_1m, srcM: ok ? 'emp' : 'fb', srcStats: srcStats };
+}
+RENDER.stress = function () {
+  const s = sn(), p = stressParams(), mo = stressModel();
+  const f = function (id, lab, v, step) { return '<label class="fld">' + esc(lab) + '<input type="number" inputmode="decimal" id="st-' + id + '" value="' + v + '" step="' + (step || 1) + '" min="0"></label>'; };
+  return '<div class="card"><h2>' + esc(t('st.title')) + '</h2><p class="mut">' + esc(t('st.d')) + '</p>' +
+    (s ? '<p>' + esc(t('st.start')) + ' ' + regBadge(s.inertia.current) + '</p>' : missing('snapshot')) +
+    '<div class="note">' + esc(t('st.src', { a: t('st.src.m.' + mo.srcM), b: t('st.src.s.' + mo.srcStats) })) + '</div>' +
+    '<div class="grid">' + f('cap', t('st.cap'), p.cap, 1000) + f('save', t('st.save'), p.save, 50) + f('years', t('st.years'), p.years, 1) + f('spend', t('st.spend'), p.spend, 500) + f('swr', t('st.swr'), p.swr, .1) + f('ret', t('st.ret'), p.ret, 1) + f('infl', t('st.infl'), p.infl, .1) + f('eq', t('st.eq'), p.eq, 5) +
+    '<label class="fld">' + esc(t('st.n')) + '<select id="st-n">' + [500, 2000, 5000].map(function (n) { return '<option value="' + n + '"' + (n === +p.n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></label></div>' +
+    '<div class="bar" style="justify-content:flex-start;margin-top:10px"><button type="button" class="btn pri" data-act="stress-run">' + esc(t('st.run')) + '</button><span id="st-prog" class="mut"></span></div></div><div id="stress-res">' + (S.stressRes ? stressResultsHtml() : '') + '</div>';
+};
+function pctl(arr, q) { const a = Array.prototype.slice.call(arr).sort(function (x, y) { return x - y; }); return a[Math.min(a.length - 1, Math.max(0, Math.floor(q * (a.length - 1))))]; }
+function summarize(res, P) {
+  const out = {}; Object.keys(res).forEach(function (k) {
+    const r = res[k], n = r.reached.length, years = r.yearly.length - 1; let nr = 0, np = 0; for (let i = 0; i < n; i++) { if (r.reached[i]) { nr++; if (r.survived[i]) np++; } }
+    const fan = { p10: [], p25: [], p50: [], p75: [], p90: [] }; r.yearly.forEach(function (a) { fan.p10.push(pctl(a, .1)); fan.p25.push(pctl(a, .25)); fan.p50.push(pctl(a, .5)); fan.p75.push(pctl(a, .75)); fan.p90.push(pctl(a, .9)); });
+    out[k] = { pReach: nr / n, pSurv: nr ? np / nr : null, pPlan: np / n, med: fan.p50[years], p10: fan.p10[years], p90: fan.p90[years], fan: fan };
+  });
+  return out;
+}
+function stressResultsHtml() {
+  const R = S.stressRes; if (!R) return '';
+  const rows = ['markov', 'stress', 'persist'].map(function (k) { const x = R.sum[k]; return ['<b>' + esc(t('st.sc.' + k)) + '</b>', pc(x.pReach * 100, 0), x.pSurv == null ? t('nd') : pc(x.pSurv * 100, 0), '<b style="color:' + (x.pPlan >= .8 ? 'var(--ok)' : (x.pPlan >= .6 ? 'var(--wa)' : 'var(--ko)')) + '">' + pc(x.pPlan * 100, 0) + '</b>', eur(x.med) + ' <span class="mut">(' + eur(x.p10) + ' / ' + eur(x.p90) + ')</span>']; });
+  return '<div class="card"><h2>' + esc(t('st.res')) + '</h2><p class="mut">' + esc(t('st.res.d', { t: eur(R.P.target), n: R.n })) + '</p>' + rtable([{ h: t('st.scen') }, { h: t('st.preach'), n: 1 }, { h: t('st.psurv'), n: 1 }, { h: t('st.pplan'), n: 1 }, { h: t('st.med'), n: 1 }], rows) +
+    '<label class="fld" style="max-width:340px;margin:10px 0">' + esc(t('st.fan')) + '<select data-ch="st-fan">' + ['markov', 'stress', 'persist'].map(function (k) { return '<option value="' + k + '"' + (R.fan === k ? ' selected' : '') + '>' + esc(t('st.sc.' + k)) + '</option>'; }).join('') + '</select></label>' +
+    '<div class="cvw"><canvas id="st-cv" class="cv"></canvas></div><p class="mut">' + esc(t('st.fan.d')) + '</p><div class="note warn">' + esc(t('st.limits')) + '</div></div>';
+}
+function drawFan() {
+  const R = S.stressRes, cv = $('#st-cv'); if (!R || !cv) return;
+  const f = R.sum[R.fan].fan, x = f.p50.map(function (_, i) { return i; });
+  drawChart(cv, { x: x, height: 280, floor0: true, hline: R.P.target, yFmt: function (v) { return v >= 1e6 ? nf(v / 1e6, 1) + ' M' : nf(v / 1e3, 0) + ' k'; }, xFmt: function (v) { return v + ' ' + t('yr'); },
+    areas: [{ lo: f.p10, hi: f.p90, color: 'rgba(255,85,0,.16)' }, { lo: f.p25, hi: f.p75, color: 'rgba(255,85,0,.28)' }], series: [{ data: f.p50, color: cssv('--or'), w: 2.4 }] });
+}
+RENDER.stress_after = function () { drawFan(); };
+RENDER.stress_resize = function () { drawFan(); };
+ACT['st-fan'] = function (a) { S.stressRes.fan = a.value; const el = $('#stress-res'); el.innerHTML = stressResultsHtml(); drawFan(); };
+ACT['stress-run'] = function () {
+  const g = function (id) { return parseNum($('#st-' + id).value); };
+  const p = { cap: g('cap') || 0, save: g('save') || 0, years: Math.max(0, Math.round(g('years') || 0)), spend: g('spend') || 0, swr: Math.max(.5, g('swr') || 3.5), ret: Math.max(1, Math.round(g('ret') || 30)), infl: g('infl') || 0, eq: Math.max(0, Math.min(100, g('eq') || 0)), n: parseInt($('#st-n').value, 10) || 2000 };
+  store.set('stress', p);
+  const mo = stressModel(), s = sn(), start = s ? s.inertia.current : spec().regimes[0];
+  const P = { cap: p.cap, save: p.save, months: p.years * 12, spend: p.spend, retMonths: p.ret * 12, infl: p.infl / 100, eq: p.eq / 100, regs: mo.regs, mu: mo.mu, sg: mo.sg, M: mo.M, start: start, target: p.spend / (p.swr / 100) };
+  const scens = ['markov', 'stress', 'persist'], seed = (Date.now() % 1e9) | 0, prog = $('#st-prog'), n = p.n;
+  const done = function (res) { S.stressRes = { sum: summarize(res, P), P: P, n: n, fan: 'markov' }; prog.textContent = ''; const el = $('#stress-res'); el.innerHTML = stressResultsHtml(); drawFan(); };
+  prog.textContent = t('st.running');
+  const fallback = function () {
+    const res = {}, chunk = 250; let si = 0, off = 0;
+    scens.forEach(function (k) { res[k] = { yearly: Array.from({ length: Math.ceil(P.months / 12) + 1 }, function () { return new Float64Array(n); }), reached: new Uint8Array(n), survived: new Uint8Array(n) }; });
+    const step = function () {
+      const k = scens[si], c = Math.min(chunk, n - off), r = rmfSim(P, k, c, seed + si * 7919 + off);
+      r.yearly.forEach(function (a, y) { res[k].yearly[y].set(a, off); }); res[k].reached.set(r.reached, off); res[k].survived.set(r.survived, off); off += c;
+      if (off >= n) { si++; off = 0; }
+      prog.textContent = t('st.running') + ' ' + Math.round((si * n + off) / (scens.length * n) * 100) + ' %';
+      if (si < scens.length) setTimeout(step, 0); else done(res);
+    };
+    setTimeout(step, 0);
+  };
+  try {
+    if (!window.Worker) throw new Error('no worker');
+    const src = 'const rmfSim=' + rmfSim.toString() + ';self.onmessage=function(e){var d=e.data,o={};d.scens.forEach(function(s,i){o[s]=rmfSim(d.P,s,d.n,d.seed+i*7919)});self.postMessage(o)}';
+    const w = new Worker(URL.createObjectURL(new Blob([src], { type: 'application/javascript' })));
+    w.onmessage = function (e) { done(e.data); w.terminate(); }; w.onerror = function () { w.terminate(); fallback(); };
+    w.postMessage({ P: P, n: n, seed: seed, scens: scens });
+  } catch (e) { fallback(); }
+};
+
+/* ============================================================================
+   ONGLET 10 : IZILY PLAY, « DEVINE LE RÉGIME »
+   ========================================================================== */
+function gstore() { return Object.assign({ games: 0, best: 0, streak: 0, bestStreak: 0, answered: 0, correct: 0 }, store.get('game', {})); }
+function shareCode() { const g = gstore(); try { return 'RMF1.' + btoa(JSON.stringify({ b: g.best, g: g.games, s: g.bestStreak, a: g.answered ? Math.round(g.correct / g.answered * 100) : 0 })); } catch (e) { return ''; } }
+function parseCode(c) { try { c = String(c).trim(); if (c.indexOf('RMF1.') !== 0) return null; const o = JSON.parse(atob(c.slice(5))); return (typeof o.b === 'number') ? o : null; } catch (e) { return null; } }
+RENDER.game = function () {
+  const b = S.data.backtest, g = gstore(), G = S.game;
+  let h = '<div class="card"><h2>' + esc(t('gm.title')) + '</h2><p class="mut">' + esc(t('gm.d')) + '</p>' + (store.ok ? '' : '<div class="note warn">' + esc(t('storage.blocked')) + '</div>') +
+    '<div class="grid s"><div class="kpi"><b>' + g.best + '</b><span>' + esc(t('gm.best')) + '</span></div><div class="kpi"><b>' + g.bestStreak + '</b><span>' + esc(t('gm.beststreak')) + '</span></div><div class="kpi"><b>' + g.games + '</b><span>' + esc(t('gm.games')) + '</span></div><div class="kpi"><b>' + (g.answered ? Math.round(g.correct / g.answered * 100) : 0) + ' %</b><span>' + esc(t('gm.acc')) + '</span></div></div></div>';
+  if (!b || !b.game_cases || b.game_cases.length < 12) return h + missing('backtest');
+  if (!G) h += '<div class="card hero"><button type="button" class="btn pri" data-act="gm-start">' + esc(t('gm.start')) + '</button></div>';
+  else if (G.i >= G.cases.length) h += '<div class="card hero"><h2>' + esc(t('gm.end')) + '</h2><div class="rn" style="font-size:44px;font-family:\'Prosto One\'">' + G.score + '</div><p>' + esc(t('gm.end.d', { c: G.correct, n: G.cases.length })) + '</p><button type="button" class="btn pri" data-act="gm-start">' + esc(t('gm.again')) + '</button></div>';
+  else {
+    const c = G.cases[G.i], F = c.f;
+    h += '<div class="card"><div class="row" style="border:0"><b>' + esc(t('gm.round', { i: G.i + 1, n: G.cases.length })) + '</b><span>' + esc(t('gm.score')) + ' ' + G.score + ' · ' + esc(t('gm.streak')) + ' ' + G.streak + '</span></div>' +
+      '<div class="grid s">' + ['spy12', 'spy6', 'hyg6', 'tlt6', 'gsg12', 'gsg6', 'be6'].map(function (k) { return '<div class="kpi"><b>' + heatCell(F[k], 20) + '</b><span>' + esc(t('comp.' + k)) + '</span></div>'; }).join('') + '</div>' +
+      '<p class="mut" style="margin-top:10px">' + esc(t('gm.q')) + '</p><div class="ans">' + spec().regimes.map(function (rg) { return '<button type="button" class="btn" data-act="gm-ans" data-k="' + rg + '"' + (G.done ? ' disabled' : '') + ' style="border-color:' + RC[rg] + '">' + esc(regName(rg)) + '</button>'; }).join('') + '</div>';
+    if (G.done) h += '<div class="note ' + (G.last ? '' : 'bad') + '" style="margin-top:10px"><b>' + esc(G.last ? t('gm.ok') : t('gm.ko')) + '</b> ' + esc(t('gm.reveal', { r: regName(c.regime), d: dfmt(c.d), G: nf(c.G, 0, true), I: nf(c.I, 0, true) })) + '</div><button type="button" class="btn pri" data-act="gm-next">' + esc(G.i + 1 >= G.cases.length ? t('gm.finish') : t('gm.next')) + '</button>';
+    h += '</div>';
+  }
+  const code = shareCode();
+  h += '<div class="card"><h2>' + esc(t('gm.share')) + '</h2><p class="mut">' + esc(t('gm.share.d')) + '</p><div class="bar" style="justify-content:flex-start"><input type="text" readonly value="' + esc(code) + '" style="flex:1 1 220px"><button type="button" class="btn" data-act="gm-copy">' + esc(t('copy')) + '</button></div>' +
+    '<label class="fld" style="margin-top:10px">' + esc(t('gm.friend')) + '<input type="text" id="gm-friend" data-in="gm-cmp" placeholder="RMF1."></label><div id="gm-cmp"></div></div>';
+  return h;
+};
+ACT['gm-start'] = function () {
+  const all = S.data.backtest.game_cases.slice(); for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const x = all[i]; all[i] = all[j]; all[j] = x; }
+  S.game = { cases: all.slice(0, 10), i: 0, score: 0, correct: 0, streak: 0, done: false, last: false }; renderTab('game');
+};
+ACT['gm-ans'] = function (a) {
+  const G = S.game, c = G.cases[G.i]; if (G.done) return; const ok = a.dataset.k === c.regime, st = gstore();
+  G.done = true; G.last = ok; st.answered++; if (ok) { st.correct++; G.correct++; G.streak++; G.score += 10 + 2 * Math.min(G.streak - 1, 5); st.streak = (st.streak || 0) + 1; st.bestStreak = Math.max(st.bestStreak, G.streak); } else { G.streak = 0; st.streak = 0; }
+  store.set('game', st); renderTab('game');
+};
+ACT['gm-next'] = function () {
+  const G = S.game; G.i++; G.done = false;
+  if (G.i >= G.cases.length) { const st = gstore(); st.games++; st.best = Math.max(st.best, G.score); store.set('game', st); }
+  renderTab('game');
+};
+ACT['gm-copy'] = function () { copyText(shareCode()); };
+ACT['gm-cmp'] = function (a) {
+  const o = parseCode(a.value), el = $('#gm-cmp'), g = gstore(); if (!a.value.trim()) { el.innerHTML = ''; return; }
+  if (!o) { el.innerHTML = '<div class="note bad">' + esc(t('gm.badcode')) + '</div>'; return; }
+  const mine = { b: g.best, g: g.games, s: g.bestStreak, a: g.answered ? Math.round(g.correct / g.answered * 100) : 0 };
+  el.innerHTML = rtable([{ h: '' }, { h: t('gm.you'), n: 1 }, { h: t('gm.friendn'), n: 1 }], [[esc(t('gm.best')), mine.b, o.b], [esc(t('gm.beststreak')), mine.s, o.s], [esc(t('gm.games')), mine.g, o.g], [esc(t('gm.acc')), mine.a + ' %', o.a + ' %']]);
+};
+
+/* ============================================================================
+   ONGLET 11 : JOURNAL DE DÉCISIONS (local) ET ALERTES
+   ========================================================================== */
+function journal() { return store.get('journal', []); }
+RENDER.journal = function () {
+  const J = journal().slice().reverse(), s = sn();
+  let h = '<div class="card"><h2>' + esc(t('jr.title')) + '</h2><p class="mut">' + esc(t('jr.d')) + '</p>' + (store.ok ? '' : '<div class="note warn">' + esc(t('storage.blocked')) + '</div>') +
+    '<div class="note">' + esc(t('jr.local')) + '</div>' +
+    '<label class="fld">' + esc(t('jr.note')) + '<textarea id="jr-note" placeholder="' + esc(t('jr.ph')) + '"></textarea></label>' +
+    '<div class="bar" style="justify-content:flex-start;margin:10px 0"><button type="button" class="btn pri" data-act="jr-add">' + esc(t('jr.add')) + '</button>' + (s ? '<span class="mut">' + esc(t('jr.ctx')) + ' ' + esc(regName(s.inertia.current)) + ' · ' + esc(t('radar.bubble')) + ' ' + nf(s.bubble.score, 0) + '</span>' : '') + '</div>' +
+    (J.length ? J.map(function (e) { return '<div class="note"><div class="row" style="border:0;padding:0"><span>' + esc(dtfmt(e.ts)) + ' ' + (e.regime ? regBadge(e.regime) : '') + (e.bubble != null ? ' <span class="mut">' + esc(t('radar.bubble')) + ' ' + nf(e.bubble, 0) + '</span>' : '') + '</span><button type="button" class="btn sm" data-act="jr-del" data-id="' + esc(e.id) + '" aria-label="' + esc(t('delete')) + '">' + esc(t('delete')) + '</button></div><div style="white-space:pre-wrap;margin-top:6px;color:var(--tx)">' + esc(e.note) + '</div></div>'; }).join('') : '<div class="mut">' + esc(t('jr.none')) + '</div>') + '</div>';
+  h += '<div class="card"><h2>' + esc(t('jr.io')) + '</h2><p class="mut">' + esc(t('jr.io.d')) + '</p><div class="bar" style="justify-content:flex-start"><button type="button" class="btn" data-act="jr-exp">' + esc(t('jr.exp')) + '</button><label class="btn" style="cursor:pointer">' + esc(t('jr.file')) + '<input type="file" accept="application/json,.json" data-ch="jr-file" style="display:none"></label><button type="button" class="btn" data-act="jr-imp">' + esc(t('jr.imp')) + '</button></div>' +
+    '<textarea id="jr-io" style="margin-top:10px" placeholder="' + esc(t('jr.io.ph')) + '"></textarea><div id="jr-msg" class="mut"></div></div>';
+  const atom = CONFIG.DATA_BASE + 'alerts.xml';
+  h += '<div class="card"><h2>' + esc(t('al.title')) + '</h2><p class="mut">' + esc(t('al.d')) + '</p><div class="note warn">' + esc(t('al.limit')) + '</div>' +
+    '<h3>' + esc(t('al.rss')) + '</h3><div class="bar" style="justify-content:flex-start"><input type="text" readonly value="' + esc(atom) + '" style="flex:1 1 240px"><button type="button" class="btn" data-act="al-copy">' + esc(t('copy')) + '</button><button type="button" class="btn" data-act="al-open">' + esc(t('open')) + '</button></div>' +
+    '<h3 style="margin-top:14px">' + esc(t('al.mail')) + '</h3>' + (CONFIG.BREVO_FORM_URL ? '<iframe title="' + esc(t('al.mail')) + '" src="' + esc(CONFIG.BREVO_FORM_URL) + '" style="width:100%;max-width:560px;height:430px;border:0;border-radius:12px;background:#fff" loading="lazy"></iframe>' : '') +
+    (CONFIG.BREVO_SIGNUP_LINK ? '<div class="bar" style="justify-content:flex-start;margin-top:8px"><a class="btn pri" target="_blank" rel="noopener" href="' + esc(CONFIG.BREVO_SIGNUP_LINK) + '">' + esc(t('al.signup')) + '</a></div>' : '') +
+    (!CONFIG.BREVO_FORM_URL && !CONFIG.BREVO_SIGNUP_LINK ? '<div class="note">' + esc(t('al.nocfg')) + '</div>' : '') + '<p class="mut">' + esc(t('al.optin')) + '</p></div>';
+  return h;
+};
+ACT['jr-add'] = function () {
+  const v = ($('#jr-note').value || '').trim(); if (!v) return; const s = sn(), J = journal();
+  J.push({ id: 'j' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ts: new Date().toISOString(), regime: s ? s.inertia.current : null, bubble: s ? s.bubble.score : null, note: v });
+  store.set('journal', J); renderTab('journal');
+};
+ACT['jr-del'] = function (a) { store.set('journal', journal().filter(function (e) { return e.id !== a.dataset.id; })); renderTab('journal'); };
+ACT['jr-exp'] = function () {
+  const txt = JSON.stringify({ app: 'radar-macro-fire', version: 1, exported_at: new Date().toISOString(), journal: journal() }, null, 1);
+  $('#jr-io').value = txt; saveFile('journal-radar-macro-fire.json', 'application/json', txt);
+};
+function importJournal(txt) {
+  const msg = $('#jr-msg');
+  try {
+    const o = JSON.parse(txt), arr = Array.isArray(o) ? o : o.journal; if (!Array.isArray(arr)) throw new Error('format');
+    const cur = journal(), ids = {}; cur.forEach(function (e) { ids[e.id] = 1; }); let add = 0;
+    arr.forEach(function (e) { if (e && e.id && e.note && !ids[e.id]) { cur.push({ id: String(e.id), ts: e.ts || new Date().toISOString(), regime: e.regime || null, bubble: e.bubble == null ? null : e.bubble, note: String(e.note) }); add++; } });
+    cur.sort(function (a, b) { return a.ts < b.ts ? -1 : 1; }); store.set('journal', cur); renderTab('journal'); const m = $('#jr-msg'); if (m) m.textContent = t('jr.imported', { n: add });
+  } catch (e) { msg.textContent = t('jr.badjson'); }
+}
+ACT['jr-imp'] = function () { importJournal($('#jr-io').value); };
+ACT['jr-file'] = function (a) { const f = a.files && a.files[0]; if (!f) return; const r = new FileReader(); r.onload = function () { importJournal(String(r.result)); }; r.readAsText(f); };
+ACT['al-copy'] = function () { copyText(CONFIG.DATA_BASE + 'alerts.xml'); };
+ACT['al-open'] = function () { openNew(CONFIG.DATA_BASE + 'alerts.xml'); };
+
+/* ============================================================================
+   ONGLET 12 : MÉTHODE, ÉTAT DES DONNÉES, FAQ
+   ========================================================================== */
+RENDER.method = function () {
+  const sp = spec(), s = sn(), F = fileStatus(), g = sp.growth, i = sp.inflation, th = sp.thresholds, B = sp.bubble, A = sp.allocation;
+  const det = function (title, body, open) { return '<details' + (open ? ' open' : '') + '><summary>' + esc(title) + '</summary><div class="bd">' + body + '</div></details>'; };
+  const p = function (k, v) { return '<p>' + esc(t(k, v)) + '</p>'; };
+  const dataBody = rtable([{ h: t('col.file') }, { h: t('strip.calc') }, { h: t('col.age'), n: 1 }, { h: t('col.state') }], F.map(function (f) { return [esc(f.file), esc(f.generated ? dtfmt(f.generated) : t('nd')), esc(f.generated ? ago(f.generated) : t('nd')), '<span class="dot ' + (f.missing && f.name !== 'snapshot' ? 'warn' : f.lv) + '"></span>' + esc(f.missing ? t('state.missing') : t('state.' + f.lv))]; })) +
+    '<h3 style="margin-top:12px">' + esc(t('data.sources')) + '</h3>' + (s ? rtable([{ h: t('col.source') }, { h: t('col.state') }, { h: t('col.detail') }], Object.keys(s.sources).map(function (k) { const x = s.sources[k], c = { ok: 'g', repli: 'y', indisponible: 'r' }[x.status] || ''; return [esc(t('src.' + k)), '<span class="badge ' + c + '">' + esc(t('srcst.' + x.status)) + '</span>', esc(x.detail || '')]; })) : missing('snapshot')) +
+    '<p class="mut">' + esc(t('data.spec', { s: t('spec.' + S.specSrc) })) + ' · ' + esc(t('data.base')) + ' ' + esc(CONFIG.DATA_BASE) + '</p>' + (Object.keys(S.err).length ? '<div class="note warn">' + esc(t('data.errs')) + ' : ' + esc(Object.keys(S.err).map(function (k) { return CONFIG.FILES[k] + ' (' + S.err[k] + ')'; }).join(', ')) + '</div>' : '') +
+    '<p class="mut">' + esc(t('banner.age')) + '</p><div class="bar" style="justify-content:flex-start"><button type="button" class="btn" data-act="refresh">' + esc(t('refresh')) + '</button></div>';
+  let h = '<div class="card"><h2>' + esc(t('me.title')) + '</h2><p class="mut">' + esc(t('me.d')) + '</p></div>';
+  h += det(t('me.data'), dataBody, true);
+  h += det(t('me.regime'), p('me.regime.1', { L: sp.windows.long, S: sp.windows.short }) + p('me.regime.2', { w12: g.spy12.weight, w6: g.spy6.weight, wh: g.hyg6.weight, wt: g.tlt_penalty.weight, cap: g.spy6.cap }) + p('me.regime.3', { a: i.gsg12.weight, b: i.gsg6.weight, c: i.breakeven6.weight }) + p('me.regime.4', { band: th.ambiguity_band }) + p('me.regime.5'));
+  h += det(t('me.macro'), p('me.macro.1', { max: sp.confidence.macro_max_adjust }) + p('me.macro.2'));
+  h += det(t('me.inertia'), p('me.inertia.1', { n: sp.inertia.required_days }) + p('me.inertia.2'));
+  h += det(t('me.bubble'), p('me.bubble.1', { w: Object.keys(B.weights).map(function (k) { return t('pil.' + k) + ' ' + Math.round(B.weights[k] * 100); }).join(', '), tiers: B.tiers.join(', ') }) + p('me.bubble.2'));
+  h += det(t('me.alloc'), p('me.alloc.1', { tilt: Math.round(A.tilt_per_tier * 100) }) + p('me.alloc.2', { r: A.action_thresholds.reinforce, o: A.action_thresholds.overweight, h: A.action_thresholds.hold, t: A.action_thresholds.trim }));
+  h += det(t('me.bt'), p('me.bt.1') + p('me.bt.2', { c: sp.backtest.cost_bps_per_traded_notional }));
+  h += det(t('me.src'), p('me.src.1') + p('me.src.2'));
+  h += det(t('me.legal'), p('me.legal.1') + p('me.legal.2'));
+  h += '<div class="card" style="margin-top:12px"><h2>' + esc(t('faq.title')) + '</h2>' + [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) { return det(t('faq.' + n + '.q'), '<p>' + esc(t('faq.' + n + '.a')) + '</p>'); }).join('') + '</div>';
+  return h;
+};
+
+/* ============================================================================
+   DÉMARRAGE
+   ========================================================================== */
+(function init() {
+  const l = store.get('lang', 'fr'); S.lang = I18N[l] ? l : 'fr';
+  S.theme = store.get('theme', 'dark') === 'light' ? 'light' : 'dark';
+  const tb = store.get('tab', 'radar'); S.tab = TABS.indexOf(tb) >= 0 ? tb : 'radar';
+  S.spec = SPEC_FALLBACK;
+  buildChrome(); renderStrip(); renderBanners(); renderTab(S.tab); loadAll();
+  setInterval(function () { renderStrip(); renderBanners(); }, 60000);
+  setInterval(function () { if (!document.hidden) loadAll(); }, CONFIG.AUTO_REFRESH_MS);
+})();
+
+})();
+</script>
