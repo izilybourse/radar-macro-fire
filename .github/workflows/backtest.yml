@@ -1,0 +1,45 @@
+# Workflow 3 : backtest et matrice de transition, recalcul hebdomadaire (dimanche).
+name: Radar backtest hebdomadaire
+on:
+  schedule:
+    - cron: "30 5 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-data
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Préparer la branche data
+        run: bash scripts/prepare_data_branch.sh
+      - name: Backtest et transitions
+        run: python scripts/radar.py backtest --out data-out
+      - name: Publier
+        run: bash scripts/publish_data_branch.sh
+      - name: Déploiement FTP Hostinger (optionnel)
+        if: ${{ env.FTP_SERVER != '' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./data-out/
+          server-dir: ${{ secrets.FTP_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
